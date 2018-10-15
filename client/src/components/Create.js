@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Stage, Layer, Rect, Text, Image } from 'react-konva';
 import Konva from 'konva';
 
-var template = require('./meme_template.jpg')
+const meme = require('./memetemplate.jpg')
 
 const canvasWidth = 500
 const canvasHeight = 300
@@ -18,6 +18,30 @@ const CanvasWrapper = styled.div`
   
 `
 
+const MemeTextForm = styled.form`
+  margin-top: 20px;
+
+  input {
+    height: 40px;
+    width: 100%;
+    font-size: 100%;
+    padding-left: 10px;
+  }
+
+  label {
+    display: block; 
+    margin-bottom: 10px;
+  }
+`
+
+const CreateMemeButton = styled.div`
+  width: 100%;
+  background: gray;
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+`
+
 class MemeImage extends React.Component {
   state = {
     image: null,
@@ -29,7 +53,7 @@ class MemeImage extends React.Component {
 
   componentDidMount() {
     const image = new window.Image();
-    image.src = "http://konvajs.github.io/assets/darth-vader.jpg";
+    image.src = meme;
     image.onload = () => {
       this.setState({
         image: image
@@ -106,6 +130,7 @@ class MemeImage extends React.Component {
 
 
 class Create extends Component {
+  stageRef = null
   constructor(props) {
     super(props)
     this.state = {
@@ -128,12 +153,29 @@ class Create extends Component {
     this.setState({bottomText: event.target.value});
   }
 
+  // function from https://stackoverflow.com/a/15832662/512042
+  downloadURI = (uri, name) => {
+      var link = document.createElement("a");
+      link.download = name;
+      link.href = uri;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      //delete link;  // cant do this and idk if its bad to not do this...
+  }
+
+  createMeme = () => {
+    var dataURL = this.stageRef.getStage().toDataURL();
+    console.log(dataURL)
+    this.downloadURI(dataURL, 'stage.png');
+  }
 
   render() {
     return (
-      <CreateWrapper style={{maxWidth: canvasWidth, height: canvasHeight, background: 'red'}}>
+      <CreateWrapper style={{maxWidth: canvasWidth, height: canvasHeight}}>
         <CanvasWrapper>
           <Stage
+            ref={ref => (this.stageRef = ref)}
             width={window.innerWidth > canvasWidth ? canvasWidth : window.innerWidth} 
             height={canvasHeight}
           >
@@ -144,19 +186,22 @@ class Create extends Component {
           </Stage>
         </CanvasWrapper>
 
-        <form>
+        <MemeTextForm>
           <label>
-            Top text:
+            <p>Top text</p>
             <input type="text" name="topText" placeholder="Top text" onChange={this.handleTopChange} />
           </label>
           <label>
-            Bottom text:
+            <p>Bottom text:</p>
             <input type="text" name="bottomText" placeholder="Bottom text" onChange={this.handleBottomChange} />
           </label>
-        </form>
+        </MemeTextForm>
 
+        <CreateMemeButton onClick={this.createMeme}>
+          <span>CREATE MEME</span>
+        </CreateMemeButton>
       </CreateWrapper>
-    );
+    )
   }
 }
 
