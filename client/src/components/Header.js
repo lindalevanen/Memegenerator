@@ -11,31 +11,61 @@ const HeaderWrapper = styled.div`
   width: 100%;
   top: 0;
   background: ${Colors.header.bg};
+`
+
+const HeaderContent = styled.div`
+  width: 100%;
+  height: 100%;
+  max-width: 700px;
+  margin: auto;
+
+  p {
+    display: inline;
+    color: white;
+    vertical-align: middle;
+    line-height: 80px;
+    font-weight: lighter;
+  }
 
   a {
+    display: inline;
     text-decoration: none;
-    float: right;
     height: 100%;
+    padding: 0 10px;
+    margin-left: 20px;
+  }
+  
+`
+
+const NavItems = styled.div`
+  display: inline;
+  
+  a {
+    display: inline;
+    float: right;
+    text-decoration: none;
+    height: 100%;
+    margin-left: 0px;
     margin-right: 20px;
     padding: 0 10px;
   }
 `
 
-const NavLink = styled.p`
-  color: white;
-  vertical-align: middle;
-  line-height: 80px;
-  font-weight: lighter;
-`
-
 const Header = (props) => (
   <HeaderWrapper>
-    <Link to='/create'>
-    	<NavLink>Create</NavLink>
-    </Link>
-    <Link to='/browse'>
-    	<NavLink>Browse</NavLink>
-  	</Link>
+    <HeaderContent>
+      <Link to='/create'>
+        <p>Home</p>
+      </Link>
+      <NavItems>
+        <Link to='/create'>
+        	<p>Create</p>
+        </Link>
+        <Link to='/browse'>
+        	<p>Browse</p>
+      	</Link>
+      </NavItems>
+    </HeaderContent>
   </HeaderWrapper>
 )
 
