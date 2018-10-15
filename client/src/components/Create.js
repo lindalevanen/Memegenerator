@@ -10,76 +10,151 @@ const canvasWidth = 500
 const canvasHeight = 300
 
 const CreateWrapper = styled.div`
-  //TODO
-`
-
-const CanvasWrapper = styled.div`
   width: 100%;
   margin: auto;
 `
 
+const CanvasWrapper = styled.div`
+  
+`
+
 class MemeImage extends React.Component {
   state = {
-    image: new window.Image()
-  };
-  handleClick = () => {
-    //TODO
-    this.state.image.src = 'http://konvajs.github.io/assets/darth-vader.jpg';
-    this.state.image.onload = () => {
-      // calling set state here will do nothing
-      // because properties of Konva.Image are not changed
-      // so we need to update layer manually
-      this.imageNode.getLayer().batchDraw();
-    };
-  };
+    image: null,
+    topTextX: null,
+    topTextY: 20,
+    bottomTextX: null,
+    bottomTextY: canvasHeight - 60
+  }
+
+  componentDidMount() {
+    const image = new window.Image();
+    image.src = "http://konvajs.github.io/assets/darth-vader.jpg";
+    image.onload = () => {
+      this.setState({
+        image: image
+      })
+    }
+  }
+
+  handleDragEndTop = e => {
+    this.setState({
+      topTextX: e.target.x(),
+      topTextY: e.target.y()
+    })
+  }
+
+  handleDragEndBottom = e => {
+    this.setState({
+      bottomTextX: e.target.x(),
+      bottomTextY: e.target.y()
+    })
+  }
+
   render() {
     return (
       <Layer>
         <Rect
           width={canvasWidth}
-          height={canvasHeight}
+          height={this.state.image ? this.state.image.height : 0}
           fill={'#ababab'}
           shadowBlur={5}
           onClick={this.handleClick}
         />
         <Image
           image={this.state.image}
-          height={canvasHeight}
+          height={this.state.image ? this.state.image.height : 0}
+          x={this.state.image ? canvasWidth/2 - this.state.image.width/2 : 0}
           ref={node => {
             this.imageNode = node;
           }}
         />
         <Text 
-          fill='white' 
-          x={canvasWidth / 2 - 50} 
-          y={20} text="Lolleropallero" 
-          fontSize={20}
+          fill='white'
+          x={this.state.topTextX}
+          y={this.state.topTextY}
+          wrap="char"
+          align="center"
+          text={this.props.topText} 
+          fontSize={40}
+          fontFamily='impact'
+          stroke='black'
+          strokeWidth={2}
+          width={canvasWidth}
+          draggable={true}
+          onDragEnd={this.handleDragEndTop}
         />
         <Text 
           fill='white' 
-          x={canvasWidth / 2 - 50} 
-          y={canvasHeight - 50} 
-          text="Lollerspollers" 
-          fontSize={20}
+          x={this.state.bottomTextX}
+          y={this.state.bottomTextY}
+          wrap="char"
+          align="center"
+          text={this.props.bottomText} 
+          fontSize={40}
+          fontFamily='impact'
+          stroke='black'
+          strokeWidth={2}
+          width={canvasWidth}
+          draggable={true}
+          onDragEnd={this.handleDragEndBottom}
         />
       </Layer>
-    );
+    )
   }
 }
 
 
 class Create extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      imageWidth: 0,
+      imageHeight: 0,
+      topText: 'TOP TEXT',
+      bottomText: 'BOTTOM TEXT'
+    }
+  }
+
+  componentDidMount() {
+    this.setState({imageWidth: window.innerWidth, imageHeight: canvasHeight})
+  }
+
+  handleTopChange = (event) => {
+    this.setState({topText: event.target.value});
+  }
+
+  handleBottomChange = (event) => {
+    this.setState({bottomText: event.target.value});
+  }
+
+
   render() {
     return (
-      <CreateWrapper>
-        <CanvasWrapper style={{maxWidth: canvasWidth, height: canvasHeight}}>
-          <Stage 
+      <CreateWrapper style={{maxWidth: canvasWidth, height: canvasHeight, background: 'red'}}>
+        <CanvasWrapper>
+          <Stage
             width={window.innerWidth > canvasWidth ? canvasWidth : window.innerWidth} 
             height={canvasHeight}
           >
-            <MemeImage />
+            <MemeImage
+              topText={this.state.topText}
+              bottomText={this.state.bottomText}
+            />
           </Stage>
         </CanvasWrapper>
+
+        <form>
+          <label>
+            Top text:
+            <input type="text" name="topText" placeholder="Top text" onChange={this.handleTopChange} />
+          </label>
+          <label>
+            Bottom text:
+            <input type="text" name="bottomText" placeholder="Bottom text" onChange={this.handleBottomChange} />
+          </label>
+        </form>
+
       </CreateWrapper>
     );
   }
