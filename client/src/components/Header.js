@@ -5,21 +5,21 @@ import { Link } from 'react-router-dom'
 import "./../App.css";
 
 const HeaderWrapper = styled.div`
-	height: 100px;
-	background: #171717;
+  height: 100px;
+  background: #171717;
 
-	a {
-		text-decoration: none;
-		float: right;
-		height: 100%;
-		text-align: center;
-	}
+  a {
+    text-decoration: none;
+    float: right;
+    height: 100%;
+    text-align: center;
+  }
 `
 
 const NavLink = styled.p`
-	color: white;
-	padding: auto;
-	margin: 10px;
+  color: white;
+  padding: auto;
+  margin: 10px;
 `
 
 const Header = (props) => (

@@ -5,11 +5,11 @@ import Browse from './components/Browse'
 
 
 const Routes = () => (
-	<Switch>
-  	<Route exact path='/' component={Create}/>
-		<Route path='/create' component={Create}/>
-		<Route path='/browse' component={Browse}/>
-	</Switch>
+  <Switch>
+    <Route exact path='/' component={Create}/>
+    <Route path='/create' component={Create}/>
+    <Route path='/browse' component={Browse}/>
+  </Switch>
 )
 
 export default Routes
