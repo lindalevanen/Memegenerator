@@ -5,7 +5,10 @@ import Create from './components/Create'
 import Browse from './components/Browse'
 
 const ContentWrapper = styled.div`
-  margin-top: 100px;
+  margin-top: 80px;
+  padding-left: 20px;
+  padding-right: 20px;
+  bottom: 0;
 `
 
 const Routes = () => (

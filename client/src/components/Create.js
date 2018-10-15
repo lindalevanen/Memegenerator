@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-
 import { Stage, Layer, Rect, Text, Image } from 'react-konva'
-import Konva from 'konva'
+
+import Colors from './../colors'
 
 const meme = require('./memetemplate.jpg')
 
@@ -12,6 +12,7 @@ const canvasHeight = 300
 const CreateWrapper = styled.div`
   width: 100%;
   margin: auto;
+  padding-top: 20px;
 `
 
 const CanvasWrapper = styled.div``
@@ -23,18 +24,38 @@ const MemeTextForm = styled.form`
     height: 40px;
     width: 100%;
     font-size: 100%;
+    background: ${Colors.header.bg};
+    color: white;
     padding-left: 10px;
+    border: 0;
+  }
+
+  .private {
+    width: auto;
+    height: auto;
+    margin-top: 20px;
+    margin-left: 10px;
   }
 
   label {
     display: block; 
     margin-bottom: 10px;
+    text-align: canter;
+
+    span {
+      color: white;
+      padding-left: 20px;
+      font-weight: lighter;
+    }
   }
 `
 
 const CreateMemeButton = styled.div`
   width: 100%;
-  background: gray;
+  background: ${Colors.header.bg};
+  color: white;
+  cursor: pointer;
+  font-weight: lighter;
   text-align: center;
   margin-top: 40px;
   padding: 20px;
@@ -137,7 +158,8 @@ class Create extends Component {
       imageHeight: 0,
       topText: 'TOP TEXT',
       bottomText: 'BOTTOM TEXT',
-      templates: ''
+      templates: '',
+      private: false
     }
   }
 
@@ -166,6 +188,10 @@ class Create extends Component {
 
   handleBottomChange = event => {
     this.setState({ bottomText: event.target.value })
+  }
+
+  handlePrivateChange = event => {
+    this.setState({ private: !this.state.private })
   }
 
   // function from https://stackoverflow.com/a/15832662/512042
@@ -203,14 +229,18 @@ class Create extends Component {
 
         <MemeTextForm>
           <label>
-            <p>Top text</p>
             <input type="text" name="topText" placeholder="Top text" onChange={this.handleTopChange} />
           </label>
           <label>
-            <p>Bottom text:</p>
             <input type="text" name="bottomText" placeholder="Bottom text" onChange={this.handleBottomChange} />
           </label>
+          <label>
+            <input className="private" type="checkbox" name="privateCheck" onChange={this.handlePrivateChange} />
+            <span>Private</span>
+          </label>
         </MemeTextForm>
+
+
 
         <CreateMemeButton onClick={this.createMeme}>
           <span>CREATE MEME</span>

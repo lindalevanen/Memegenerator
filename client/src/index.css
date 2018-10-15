@@ -1,6 +1,8 @@
 body, html {
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  background: #252525;
   font-family: Helvetica Neue;
   box-sizing: border-box;
 }
@@ -9,7 +11,15 @@ body, html {
 *:before,
 *:after {
   font-family: inherit;
+  letter-spacing: 1px;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 100%;
+  min-height: 100vh;
 }

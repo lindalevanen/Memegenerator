@@ -1,15 +1,16 @@
 import React from "react";
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import Colors from './../colors'
 
 import "./../App.css";
 
 const HeaderWrapper = styled.div`
   position: fixed;
-  height: 100px;
+  height: 80px;
   width: 100%;
   top: 0;
-  background: #171717;
+  background: ${Colors.header.bg};
 
   a {
     text-decoration: none;
@@ -23,7 +24,8 @@ const HeaderWrapper = styled.div`
 const NavLink = styled.p`
   color: white;
   vertical-align: middle;
-  line-height: 100px;
+  line-height: 80px;
+  font-weight: lighter;
 `
 
 const Header = (props) => (
