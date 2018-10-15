@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import { Stage, Layer, Rect, Text, Image } from 'react-konva';
-import Konva from 'konva';
+import { Stage, Layer, Rect, Text, Image } from 'react-konva'
+import Konva from 'konva'
 
 var template = require('./meme_template.jpg')
 
@@ -14,9 +14,7 @@ const CreateWrapper = styled.div`
   margin: auto;
 `
 
-const CanvasWrapper = styled.div`
-  
-`
+const CanvasWrapper = styled.div``
 
 class MemeImage extends React.Component {
   state = {
@@ -28,8 +26,8 @@ class MemeImage extends React.Component {
   }
 
   componentDidMount() {
-    const image = new window.Image();
-    image.src = "http://konvajs.github.io/assets/darth-vader.jpg";
+    const image = new window.Image()
+    image.src = 'http://konvajs.github.io/assets/darth-vader.jpg'
     image.onload = () => {
       this.setState({
         image: image
@@ -64,36 +62,38 @@ class MemeImage extends React.Component {
         <Image
           image={this.state.image}
           height={this.state.image ? this.state.image.height : 0}
-          x={this.state.image ? canvasWidth/2 - this.state.image.width/2 : 0}
+          x={
+            this.state.image ? canvasWidth / 2 - this.state.image.width / 2 : 0
+          }
           ref={node => {
-            this.imageNode = node;
+            this.imageNode = node
           }}
         />
-        <Text 
-          fill='white'
+        <Text
+          fill="white"
           x={this.state.topTextX}
           y={this.state.topTextY}
           wrap="char"
           align="center"
-          text={this.props.topText} 
+          text={this.props.topText}
           fontSize={40}
-          fontFamily='impact'
-          stroke='black'
+          fontFamily="impact"
+          stroke="black"
           strokeWidth={2}
           width={canvasWidth}
           draggable={true}
           onDragEnd={this.handleDragEndTop}
         />
-        <Text 
-          fill='white' 
+        <Text
+          fill="white"
           x={this.state.bottomTextX}
           y={this.state.bottomTextY}
           wrap="char"
           align="center"
-          text={this.props.bottomText} 
+          text={this.props.bottomText}
           fontSize={40}
-          fontFamily='impact'
-          stroke='black'
+          fontFamily="impact"
+          stroke="black"
           strokeWidth={2}
           width={canvasWidth}
           draggable={true}
@@ -104,7 +104,6 @@ class MemeImage extends React.Component {
   }
 }
 
-
 class Create extends Component {
   constructor(props) {
     super(props)
@@ -112,29 +111,52 @@ class Create extends Component {
       imageWidth: 0,
       imageHeight: 0,
       topText: 'TOP TEXT',
-      bottomText: 'BOTTOM TEXT'
+      bottomText: 'BOTTOM TEXT',
+      templates: ''
+    }
+  }
+
+  TEMPLATE_API_URL = 'https://api.imgflip.com/get_memes'
+
+  fetchTemplates = async () => {
+    try {
+      const response = await fetch(this.TEMPLATE_API_URL)
+      const body = await response.json()
+      if (body.success) {
+        this.setState({ templates: await body.data })
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
   componentDidMount() {
-    this.setState({imageWidth: window.innerWidth, imageHeight: canvasHeight})
+    this.setState({ imageWidth: window.innerWidth, imageHeight: canvasHeight })
+    this.fetchTemplates()
   }
 
-  handleTopChange = (event) => {
-    this.setState({topText: event.target.value});
+  handleTopChange = event => {
+    this.setState({ topText: event.target.value })
   }
 
-  handleBottomChange = (event) => {
-    this.setState({bottomText: event.target.value});
+  handleBottomChange = event => {
+    this.setState({ bottomText: event.target.value })
   }
-
 
   render() {
     return (
-      <CreateWrapper style={{maxWidth: canvasWidth, height: canvasHeight, background: 'red'}}>
+      <CreateWrapper
+        style={{
+          maxWidth: canvasWidth,
+          height: canvasHeight,
+          background: 'red'
+        }}
+      >
         <CanvasWrapper>
           <Stage
-            width={window.innerWidth > canvasWidth ? canvasWidth : window.innerWidth} 
+            width={
+              window.innerWidth > canvasWidth ? canvasWidth : window.innerWidth
+            }
             height={canvasHeight}
           >
             <MemeImage
@@ -147,16 +169,25 @@ class Create extends Component {
         <form>
           <label>
             Top text:
-            <input type="text" name="topText" placeholder="Top text" onChange={this.handleTopChange} />
+            <input
+              type="text"
+              name="topText"
+              placeholder="Top text"
+              onChange={this.handleTopChange}
+            />
           </label>
           <label>
             Bottom text:
-            <input type="text" name="bottomText" placeholder="Bottom text" onChange={this.handleBottomChange} />
+            <input
+              type="text"
+              name="bottomText"
+              placeholder="Bottom text"
+              onChange={this.handleBottomChange}
+            />
           </label>
         </form>
-
       </CreateWrapper>
-    );
+    )
   }
 }
 
