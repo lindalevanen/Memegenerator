@@ -27,6 +27,13 @@ const HeaderContent = styled.div`
     font-weight: lighter;
   }
 
+  #logo {
+    color: ${Colors.accent};
+    font-family: impact;
+    font-size: 40px;
+    font-weight: bold;
+  }
+
   a {
     display: inline;
     text-decoration: none;
@@ -39,7 +46,7 @@ const HeaderContent = styled.div`
 
 const NavItems = styled.div`
   display: inline;
-  
+
   a {
     display: inline;
     float: right;
@@ -55,7 +62,7 @@ const Header = (props) => (
   <HeaderWrapper>
     <HeaderContent>
       <Link to='/create'>
-        <p>Home</p>
+        <p id='logo'>MG</p>
       </Link>
       <NavItems>
         <Link to='/create'>
