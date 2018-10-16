@@ -20,7 +20,7 @@ const HeaderContent = styled.div`
   height: 100%;
   max-width: 700px;
   margin: auto;
-  padding: 0px 20px;
+  padding-left: 20px;
 
   p {
     display: inline;
