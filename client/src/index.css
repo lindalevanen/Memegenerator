@@ -1,9 +1,19 @@
+@font-face {
+  font-family: 'Impact';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('Impact'),
+    url(./fonts/coda-heavy-webfont.woff2) format('woff2'),
+    url(./fonts/coda-heavy-webfont.woff) format('woff');
+}
+
 body, html {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   background: #252525;
-  font-family: Helvetica Neue;
+  font-family: Impact;
   box-sizing: border-box;
 }
 

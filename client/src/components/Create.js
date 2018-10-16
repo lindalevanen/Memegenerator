@@ -102,7 +102,7 @@ class MemeImage extends React.Component {
         <Rect
           width={this.props.imageWidth}
           height={this.props.imageHeight}
-          fill={'#ababab'}
+          fill={'#000000'}
           shadowBlur={5}
           onClick={this.handleClick}
         />
