@@ -8,6 +8,7 @@ const meme = require('./memetemplate.jpg')
 
 const canvasWidth = 500
 const canvasHeight = 300
+const marginX = 20;
 
 const CreateWrapper = styled.div`
   width: 100%;
@@ -77,6 +78,8 @@ class MemeImage extends React.Component {
       this.setState({
         image: image
       })
+      this.props.imageDimensionChange(image.width, image.height)
+      this.setState({bottomTextY: image.height - 60})
     }
   }
 
@@ -98,15 +101,16 @@ class MemeImage extends React.Component {
     return (
       <Layer>
         <Rect
-          width={canvasWidth}
-          height={this.state.image ? this.state.image.height : 0}
+          width={this.props.imageWidth}
+          height={this.props.imageHeight}
           fill={'#ababab'}
           shadowBlur={5}
           onClick={this.handleClick}
         />
         <Image
           image={this.state.image}
-          height={this.state.image ? this.state.image.height : 0}
+          width={this.props.imageWidth}
+          height={this.props.imageHeight}
           x={
             this.state.image ? canvasWidth / 2 - this.state.image.width / 2 : 0
           }
@@ -150,12 +154,14 @@ class MemeImage extends React.Component {
 }
 
 class Create extends Component {
+
   stageRef = null
+  
   constructor(props) {
     super(props)
     this.state = {
-      imageWidth: 0,
-      imageHeight: 0,
+      imageWidth: canvasWidth,
+      imageHeight: canvasHeight,
       topText: 'TOP TEXT',
       bottomText: 'BOTTOM TEXT',
       templates: '',
@@ -178,8 +184,9 @@ class Create extends Component {
   }
 
   componentDidMount() {
-    this.setState({ imageWidth: window.innerWidth, imageHeight: canvasHeight })
+    //this.setState({ imageWidth: window.innerWidth, imageHeight: canvasHeight })
     this.fetchTemplates()
+    window.addEventListener("resize", () => this.setState({x: "lol"}))
   }
 
   handleTopChange = event => {
@@ -211,18 +218,30 @@ class Create extends Component {
     this.downloadURI(dataURL, 'stage.png');
   }
 
+  onImageDimensionChange = (width, height) => {
+    this.setState({ imageWidth: width, imageHeight: height})
+  }
+
   render() {
+    const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
+    const height = width * this.state.imageHeight / this.state.imageWidth
+    const ratio = width / canvasWidth
+
     return (
-      <CreateWrapper style={{maxWidth: canvasWidth, height: canvasHeight}}>
+      <CreateWrapper style={{maxWidth: canvasWidth}}>
         <CanvasWrapper>
           <Stage
             ref={ref => (this.stageRef = ref)}
-            width={window.innerWidth > canvasWidth ? canvasWidth : window.innerWidth} 
-            height={canvasHeight}
+            width={canvasWidth} 
+            height={height}
+            scale={{x: ratio, y: ratio}}
           >
             <MemeImage
               topText={this.state.topText}
               bottomText={this.state.bottomText}
+              imageHeight={this.state.imageHeight}
+              imageWidth={this.state.imageWidth}
+              imageDimensionChange={this.onImageDimensionChange}
             />
           </Stage>
         </CanvasWrapper>
@@ -239,8 +258,6 @@ class Create extends Component {
             <span>Private</span>
           </label>
         </MemeTextForm>
-
-
 
         <CreateMemeButton onClick={this.createMeme}>
           <span>CREATE MEME</span>

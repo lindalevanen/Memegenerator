@@ -6,6 +6,7 @@ import Colors from './../colors'
 import "./../App.css";
 
 const HeaderWrapper = styled.div`
+  z-index: 1;
   position: fixed;
   height: 80px;
   width: 100%;
