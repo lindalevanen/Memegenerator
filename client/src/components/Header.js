@@ -33,7 +33,7 @@ const HeaderContent = styled.div`
   #logo {
     color: ${Colors.accent};
     font-family: impact;
-    font-size: 40px;
+    font-size: 35px;
     font-weight: bold;
   }
 

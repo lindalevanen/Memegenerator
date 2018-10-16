@@ -1,10 +1,12 @@
 @font-face {
   font-family: 'Impact';
   font-style: normal;
-  font-weight: 400;
+  text-stroke: 3px black;
+  -webkit-text-stroke: 3px black;
+
   src:
-    local('Impact'),
-    local('Anton')
+    url(./fonts/anton-regular-webfont.woff2) format('woff2'),
+    url(./fonts/anton-regular-webfont.woff) format('woff');
 }
 
 body, html {
