@@ -1,9 +1,9 @@
 import React from "react";
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import Colors from './../colors'
+import { withRouter } from "react-router";
 
-import "./../App.css";
+import Colors from './../colors'
 
 const HeaderWrapper = styled.div`
   z-index: 1;
@@ -11,6 +11,7 @@ const HeaderWrapper = styled.div`
   height: 80px;
   width: 100%;
   top: 0;
+  box-shadow: 0px 1px 6px black;
   background: ${Colors.header.bg};
 `
 
@@ -19,6 +20,7 @@ const HeaderContent = styled.div`
   height: 100%;
   max-width: 700px;
   margin: auto;
+  padding: 0px 20px;
 
   p {
     display: inline;
@@ -40,7 +42,6 @@ const HeaderContent = styled.div`
     text-decoration: none;
     height: 100%;
     padding: 0 10px;
-    margin-left: 20px;
   }
   
 `
@@ -54,27 +55,38 @@ const NavItems = styled.div`
     text-decoration: none;
     height: 100%;
     margin-left: 0px;
-    margin-right: 20px;
-    padding: 0 10px;
+    margin-right: 5px;
+    padding: 0 15px;
+  }
+
+  .active {
+    background: ${Colors.main.bg};
   }
 `
 
-const Header = (props) => (
-  <HeaderWrapper>
+const Header = (props) => {
+  const path = props.location.pathname
+  const activeLocation = 
+    path === "/create" || path === "/" ? "create"
+    : path === "/browse" ? "browse" : ""
+
+  return (
+  <HeaderWrapper onClick={() => console.log(props.location)}>
     <HeaderContent>
       <Link to='/create'>
         <p id='logo'>MG</p>
       </Link>
       <NavItems>
-        <Link to='/create'>
+        <Link className={activeLocation === "create" ? "active" : ""} to='/create'>
         	<p>Create</p>
         </Link>
-        <Link to='/browse'>
+        <Link className={activeLocation === "browse" ? "active" : ""} to='/browse'>
         	<p>Browse</p>
       	</Link>
       </NavItems>
     </HeaderContent>
   </HeaderWrapper>
-)
+  )
+}
 
-export default Header
+export default withRouter(Header)

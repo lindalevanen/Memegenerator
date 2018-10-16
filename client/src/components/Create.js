@@ -41,7 +41,6 @@ const MemeTextForm = styled.form`
   label {
     display: block; 
     margin-bottom: 10px;
-    text-align: canter;
 
     span {
       color: white;
@@ -232,7 +231,7 @@ class Create extends Component {
         <CanvasWrapper>
           <Stage
             ref={ref => (this.stageRef = ref)}
-            width={width} 
+            width={width}
             height={height}
             scale={{x: ratio, y: ratio}}
           >
