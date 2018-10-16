@@ -4,8 +4,7 @@
   font-weight: 400;
   src:
     local('Impact'),
-    url(./fonts/coda-heavy-webfont.woff2) format('woff2'),
-    url(./fonts/coda-heavy-webfont.woff) format('woff');
+    local('Anton')
 }
 
 body, html {
@@ -13,7 +12,7 @@ body, html {
   padding: 0;
   min-height: 100vh;
   background: #252525;
-  font-family: Impact;
+  font-family: Helvetica Neue;
   box-sizing: border-box;
 }
 
