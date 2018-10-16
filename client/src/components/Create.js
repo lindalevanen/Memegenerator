@@ -232,7 +232,7 @@ class Create extends Component {
         <CanvasWrapper>
           <Stage
             ref={ref => (this.stageRef = ref)}
-            width={canvasWidth} 
+            width={width} 
             height={height}
             scale={{x: ratio, y: ratio}}
           >
