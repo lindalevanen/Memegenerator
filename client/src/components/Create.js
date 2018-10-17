@@ -72,6 +72,37 @@ const CreateMemeButton = styled.div`
   padding: 20px;
 `
 
+const SetImageContainer = styled.div`
+  background: ${Colors.header.bg};
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: white;
+  border: 1px solid gray;
+  cursor: pointer;
+
+  p {
+    width: 100%;
+  }
+`
+
+const ChooseTemplateWrapper = styled.div`
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  margin: auto;
+  width: ${props => props.width + "px" || canvasWidth + "px"};
+  height: 800px;
+  max-height: ${window.innerHeight - 40 + "px"};
+  background: ${Colors.popup.bg};
+
+  p {
+    float: right;
+    padding: 20px;
+    cursor: pointer;
+  }
+`
+
 class MemeImage extends React.Component {
   state = {
     image: null,
@@ -82,6 +113,10 @@ class MemeImage extends React.Component {
   }
 
   componentDidMount() {
+    
+  }
+
+  loadImage() {
     const image = new window.Image();
     image.src = meme;
     image.onload = () => {
@@ -95,22 +130,45 @@ class MemeImage extends React.Component {
   }
 
   handleDragEndTop = e => {
-    this.setState({
-      topTextX: e.target.x(),
-      topTextY: e.target.y()
-    })
+    const x = e.target.x()
+    const y = e.target.y()
+    if(y < this.props.imageHeight && y > 0 &&
+       Math.abs(x) < this.props.imageWidth/2) {
+      this.setState({
+        topTextX: e.target.x(),
+        topTextY: e.target.y()
+      })
+    } else {
+      this.setState({
+        topTextX: this.state.topTextX,
+        topTextY: this.state.topTextY
+      })
+    }
   }
 
   handleDragEndBottom = e => {
-    this.setState({
-      bottomTextX: e.target.x(),
-      bottomTextY: e.target.y()
-    })
+    const x = e.target.x()
+    const y = e.target.y()
+    if(y < this.props.imageHeight && y > 0 &&
+       Math.abs(x) < this.props.imageWidth/2) {
+      this.setState({
+        bottomTextX: e.target.x(),
+        bottomTextY: e.target.y()
+      })
+    } else {
+      this.setState({
+        bottomTextX: this.state.bottomTextX,
+        bottomTextY: this.state.bottomTextY
+      })
+    }
   }
 
   render() {
+    console.log("x: "+this.state.topTextX)
+    console.log("y: "+this.state.topTextY)
     return (
-      <Layer>
+      <Layer
+        >
         <Rect
           width={this.props.imageWidth}
           height={this.props.imageHeight}
@@ -128,6 +186,7 @@ class MemeImage extends React.Component {
           ref={node => {
             this.imageNode = node
           }}
+          visible={this.props.visible}
         />
         <Text 
           fill='white'
@@ -177,7 +236,8 @@ class Create extends Component {
       bottomText: 'BOTTOM TEXT',
       templates: '',
       private: false,
-      memeImageVisible: false
+      memeImageVisible: false,
+      chooseTemplateOpen: false
     }
   }
 
@@ -226,11 +286,15 @@ class Create extends Component {
 
   createMeme = () => {
     var dataURL = this.stageRef.getStage().toDataURL();
-    this.downloadURI(dataURL, 'meme.png');
+    this.downloadURI(dataURL, 'meme.jpg');
   }
 
   onImageDimensionChange = (width, height) => {
     this.setState({ imageWidth: width, imageHeight: height})
+  }
+
+  chooseImage() {
+
   }
 
   render() {
@@ -240,13 +304,21 @@ class Create extends Component {
 
     return (
       <CreateWrapper style={{maxWidth: canvasWidth}}>
+        {!this.state.memeImageVisible &&
+          <SetImageContainer 
+            style={{width: width, height: height}} 
+            onClick={() => this.setState({chooseTemplateOpen: true})}
+          >
+            <p>Choose image</p>
+          </SetImageContainer>
+        }
         <CanvasWrapper>
           <Stage
             ref={ref => (this.stageRef = ref)}
             width={width}
-            height={height}
+            height={this.state.memeImageVisible ? height : 0}
             scale={{x: ratio, y: ratio}}
-            visible={true}
+            visible={this.state.memeImageVisible}
           >
             <MemeImage
               topText={this.state.topText}
@@ -275,6 +347,13 @@ class Create extends Component {
         <CreateMemeButton onClick={this.createMeme}>
           <span>CREATE MEME</span>
         </CreateMemeButton>
+
+        {/* TODO: I THINK THIS SHOULD BE MADE INTO A COMPONENT (and not load templates on app start) */}
+        {this.state.chooseTemplateOpen &&
+          <ChooseTemplateWrapper width={width} height={height}>
+            <p onClick={() => this.setState({chooseTemplateOpen: false})}>close</p>
+          </ChooseTemplateWrapper>
+        }
       </CreateWrapper>
     )
   }
