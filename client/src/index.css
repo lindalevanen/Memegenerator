@@ -5,6 +5,7 @@
   -webkit-text-stroke: 3px black;
 
   src:
+    local('Impact'),
     url(./fonts/anton-regular-webfont.woff2) format('woff2'),
     url(./fonts/anton-regular-webfont.woff) format('woff');
 }
