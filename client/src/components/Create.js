@@ -16,7 +16,18 @@ const CreateWrapper = styled.div`
   padding-top: 20px;
 `
 
-const CanvasWrapper = styled.div``
+const CanvasWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  text-align: center;
+
+  p {
+    display: inline;
+    color: white;
+    vertical-align: middle;
+    line-height: ${canvasHeight};
+  }
+`
 
 const MemeTextForm = styled.form`
   margin-top: 20px;
@@ -79,6 +90,7 @@ class MemeImage extends React.Component {
       })
       this.props.imageDimensionChange(image.width, image.height)
       this.setState({bottomTextY: image.height - 60})
+      this.props.setImageVisible(true)
     }
   }
 
@@ -164,7 +176,8 @@ class Create extends Component {
       topText: 'TOP TEXT',
       bottomText: 'BOTTOM TEXT',
       templates: '',
-      private: false
+      private: false,
+      memeImageVisible: false
     }
   }
 
@@ -213,8 +226,7 @@ class Create extends Component {
 
   createMeme = () => {
     var dataURL = this.stageRef.getStage().toDataURL();
-    console.log(dataURL)
-    this.downloadURI(dataURL, 'stage.png');
+    this.downloadURI(dataURL, 'meme.png');
   }
 
   onImageDimensionChange = (width, height) => {
@@ -234,6 +246,7 @@ class Create extends Component {
             width={width}
             height={height}
             scale={{x: ratio, y: ratio}}
+            visible={true}
           >
             <MemeImage
               topText={this.state.topText}
@@ -241,6 +254,7 @@ class Create extends Component {
               imageHeight={this.state.imageHeight}
               imageWidth={this.state.imageWidth}
               imageDimensionChange={this.onImageDimensionChange}
+              setImageVisible={(visible) => this.setState({memeImageVisible: visible})}
             />
           </Stage>
         </CanvasWrapper>
