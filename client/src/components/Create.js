@@ -89,31 +89,30 @@ const SetImageContainer = styled.div`
 const ChooseTemplateWrapper = styled.div`
   position: absolute;
   z-index: 2;
-  top: 20px;
-  margin: auto;
   width: ${props => props.width + "px" || canvasWidth + "px"};
   height: 800px;
   max-height: ${window.innerHeight - 40 + "px"};
+  top: 20px;
+  margin: auto;
   background: ${Colors.popup.bg};
+  box-shadow: 3px 3px 6px black;
 
   p {
     float: right;
     padding: 20px;
     cursor: pointer;
+    font-size: 20px;
+    color: ${Colors.accent}
   }
 `
 
 class MemeImage extends React.Component {
   state = {
-    image: null,
+    image: null,  // TODO: i think we should move the image data to parent component, and pass as props
     topTextX: null,
     topTextY: 20,
     bottomTextX: null,
     bottomTextY: canvasHeight - 60
-  }
-
-  componentDidMount() {
-    
   }
 
   loadImage() {
@@ -294,7 +293,7 @@ class Create extends Component {
   }
 
   chooseImage() {
-
+    // TODO
   }
 
   render() {
@@ -351,7 +350,9 @@ class Create extends Component {
         {/* TODO: I THINK THIS SHOULD BE MADE INTO A COMPONENT (and not load templates on app start) */}
         {this.state.chooseTemplateOpen &&
           <ChooseTemplateWrapper width={width} height={height}>
-            <p onClick={() => this.setState({chooseTemplateOpen: false})}>close</p>
+            <p onClick={() => this.setState({chooseTemplateOpen: false})} >
+              X 
+            </p>
           </ChooseTemplateWrapper>
         }
       </CreateWrapper>
