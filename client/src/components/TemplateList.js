@@ -87,6 +87,7 @@ class TemplateList extends React.Component {
   }
 
   render() { 
+    console.log(this.props.width)
     return (
       <ViewContainer>
         <ChooseTemplateWrapper id='template-content' width={this.props.width}>
@@ -97,7 +98,7 @@ class TemplateList extends React.Component {
             </p>
           </Header>
           <ListWrapper>
-            <GridList cols={3} height='auto'>
+            <GridList cols={this.props.width < 500 ? 2 : 3} height='auto'>
               {this.props.list.map(meme => this.parseMemeJson(meme))}
             </GridList>
           </ListWrapper>

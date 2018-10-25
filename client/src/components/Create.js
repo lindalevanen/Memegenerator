@@ -124,8 +124,16 @@ class Create extends React.Component {
   }
 
   componentDidMount() {
-    //this.setState({ imageWidth: window.innerWidth, imageHeight: canvasHeight })
     this.fetchTemplates()
+    window.addEventListener('resize', this.handleResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+  }
+
+  handleResize = () => {
+    this.setState(this.state);
   }
 
   handleTopChange = event => {
