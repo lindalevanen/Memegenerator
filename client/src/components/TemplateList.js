@@ -24,6 +24,7 @@ const ChooseTemplateWrapper = styled.div`
   max-height: ${window.innerHeight - 40 + "px"};
   top: 20px;
   margin: auto;
+  padding-top: 10px;
   background: ${Colors.popup.bg};
   box-shadow: 3px 3px 6px black;
   overflow: scroll;
@@ -31,15 +32,25 @@ const ChooseTemplateWrapper = styled.div`
 
 const ListWrapper = styled.div`
   padding: 20px;
+  padding-top: 0px;
 `
 
 const Header = styled.div`
   width: 100%;
-  height: 60px;
+
+  h3 {
+    color: white;
+    padding: 20px;
+    margin-left: 5px;
+    font-weight: normal;
+    display: inline-block;
+  }
 
   p {
     float: right;
-    padding: 20px;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
     cursor: pointer;
     font-size: 20px;
     color: ${Colors.accent}
@@ -75,12 +86,13 @@ class TemplateList extends React.Component {
       <ViewContainer>
         <ChooseTemplateWrapper id='template-content' width={this.props.width}>
           <Header>
+            <h3>Choose template</h3>
             <p onClick={this.props.closeList}>
               X 
             </p>
           </Header>
           <ListWrapper>
-            <GridList cols={2} height='auto'>
+            <GridList cols={3} height='auto'>
               {this.props.list.map(meme => this.parseMemeJson(meme))}
             </GridList>
           </ListWrapper>
