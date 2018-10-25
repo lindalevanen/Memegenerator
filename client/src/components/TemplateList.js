@@ -33,6 +33,10 @@ const ChooseTemplateWrapper = styled.div`
 const ListWrapper = styled.div`
   padding: 20px;
   padding-top: 0px;
+
+  img {
+    cursor: pointer;
+  }
 `
 
 const Header = styled.div`
