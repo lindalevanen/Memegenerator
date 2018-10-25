@@ -126,10 +126,12 @@ class Create extends React.Component {
   componentDidMount() {
     this.fetchTemplates()
     window.addEventListener('resize', this.handleResize)
+    window.addEventListener('orientationchange', this.handleResize)
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize)
+    window.addEventListener('orientationchange', this.handleResize)
   }
 
   handleResize = () => {
