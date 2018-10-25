@@ -54,6 +54,7 @@ const Header = styled.div`
     cursor: pointer;
     font-size: 20px;
     color: ${Colors.accent}
+    font-family: &#215;
   }
 `
 
@@ -88,7 +89,7 @@ class TemplateList extends React.Component {
           <Header>
             <h3>Choose template</h3>
             <p onClick={this.props.closeList}>
-              X 
+              &#x2715;
             </p>
           </Header>
           <ListWrapper>
