@@ -5,7 +5,7 @@ import GridList from '@material-ui/core/GridList';
 import Colors from './../colors'
 
 const ViewContainer = styled.div`
-  position: absolute;
+  position: fixed;
   z-index: 2;
   top: 0;
   bottom: 0;

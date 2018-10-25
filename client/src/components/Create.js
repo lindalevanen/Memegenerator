@@ -172,12 +172,6 @@ class Create extends React.Component {
 
     return (
       <CreateWrapper style={{maxWidth: canvasWidth}}>
-        <SetImageContainer 
-          style={{width: width, height: !this.state.memeImageVisible ? height : '50px'}} 
-          onClick={() => this.setState({chooseTemplateOpen: true})}
-        >
-          <p>{!this.state.memeImageVisible ? "Choose image" : "Choose another"}</p>
-        </SetImageContainer>
         <CanvasWrapper>
           <Stage
             ref={ref => (this.stageRef = ref)}
@@ -197,6 +191,13 @@ class Create extends React.Component {
             />
           </Stage>
         </CanvasWrapper>
+
+        <SetImageContainer 
+          style={{width: width, height: !this.state.memeImageVisible ? height : '50px'}} 
+          onClick={() => this.setState({chooseTemplateOpen: true})}
+        >
+          <p>{!this.state.memeImageVisible ? "Choose image" : "Choose another"}</p>
+        </SetImageContainer>
 
         <MemeTextForm>
           <label>
