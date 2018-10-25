@@ -71,7 +71,7 @@ const Header = (props) => {
     : path === "/browse" ? "browse" : ""
 
   return (
-  <HeaderWrapper onClick={() => console.log(props.location)}>
+  <HeaderWrapper>
     <HeaderContent>
       <Link to='/create'>
         <p id='logo'>MG</p>

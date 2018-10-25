@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import GridList from '@material-ui/core/GridList';
 
 import Colors from './../colors'
 
@@ -25,6 +26,16 @@ const ChooseTemplateWrapper = styled.div`
   margin: auto;
   background: ${Colors.popup.bg};
   box-shadow: 3px 3px 6px black;
+  overflow: scroll;
+`
+
+const ListWrapper = styled.div`
+  padding: 20px;
+`
+
+const Header = styled.div`
+  width: 100%;
+  height: 60px;
 
   p {
     float: right;
@@ -53,16 +64,26 @@ class TemplateList extends React.Component {
     }
   }
 
+  parseMemeJson(json) {
+    return (
+      <img key={json.id} src={json.url} alt='' onClick={() => this.props.imageChosen(json)}/>
+    )
+  }
 
   render() { 
     return (
       <ViewContainer>
         <ChooseTemplateWrapper id='template-content' width={this.props.width}>
-          <p onClick={this.props.closeList} >
-            X 
-          </p>
-
-
+          <Header>
+            <p onClick={this.props.closeList}>
+              X 
+            </p>
+          </Header>
+          <ListWrapper>
+            <GridList cols={2} height='auto'>
+              {this.props.list.map(meme => this.parseMemeJson(meme))}
+            </GridList>
+          </ListWrapper>
         </ChooseTemplateWrapper>
       </ViewContainer>
     )

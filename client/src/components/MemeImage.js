@@ -1,29 +1,38 @@
 import React from 'react'
 import { Layer, Rect, Text, Image } from 'react-konva'
 
-const meme = require('./memetemplate.jpg')
+//const meme = 'https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-icon.svg?v=6e4af45f4d66' //require('./memetemplate.jpg')
 
 const canvasWidth = 500
 const canvasHeight = 300
 
 class MemeImage extends React.Component {
   state = {
-    image: null,  // TODO: i think we should move the image data to parent component, and pass as props
+    image: null,
     topTextX: null,
     topTextY: 20,
     bottomTextX: null,
     bottomTextY: canvasHeight - 60
   }
 
-  loadImage() {
+  componentWillReceiveProps(newProps) {
+    if(newProps.image !== this.props.image) {
+      this.loadImage(newProps.image.url)
+    }
+    if(newProps.imageHeight !== this.props.imageHeight) {
+      this.setState({bottomTextY: newProps.imageHeight - 60})
+    }
+  }
+
+  loadImage(url) {
     const image = new window.Image();
-    image.src = meme;
+    image.src = url;
+    image.setAttribute('crossOrigin', 'anonymous');
     image.onload = () => {
       this.setState({
         image: image
       })
       this.props.imageDimensionChange(image.width, image.height)
-      this.setState({bottomTextY: image.height - 60})
       this.props.setImageVisible(true)
     }
   }
@@ -63,11 +72,8 @@ class MemeImage extends React.Component {
   }
 
   render() {
-    console.log("x: "+this.state.topTextX)
-    console.log("y: "+this.state.topTextY)
     return (
-      <Layer
-        >
+      <Layer>
         <Rect
           width={this.props.imageWidth}
           height={this.props.imageHeight}
@@ -80,12 +86,11 @@ class MemeImage extends React.Component {
           width={this.props.imageWidth}
           height={this.props.imageHeight}
           x={
-            this.state.image ? canvasWidth / 2 - this.state.image.width / 2 : 0
+            this.state.image ? canvasWidth / 2 - this.props.imageWidth / 2 : 0
           }
           ref={node => {
             this.imageNode = node
           }}
-          visible={this.props.visible}
         />
         <Text 
           fill='white'
