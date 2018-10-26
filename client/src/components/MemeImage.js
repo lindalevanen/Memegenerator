@@ -95,7 +95,7 @@ class MemeImage extends React.Component {
           wrap="char"
           align="center"
           text={this.props.topText}
-          fontSize={40}
+          fontSize={this.props.fontSize}
           fontFamily='impact'
           stroke='black'
           strokeWidth={2}
@@ -110,7 +110,7 @@ class MemeImage extends React.Component {
           wrap="char"
           align="center"
           text={this.props.bottomText}
-          fontSize={40}
+          fontSize={this.props.fontSize}
           fontFamily='impact'
           stroke='black'
           strokeWidth={2}

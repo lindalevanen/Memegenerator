@@ -7,6 +7,8 @@ import TemplateList from './TemplateList'
 import FinishedMeme from './FinishedMeme'
 import Colors from './../colors'
 
+const fontSizeIcon = require('../images/font_icon.png')
+
 const canvasWidth = 500
 const canvasHeight = 300
 const marginX = 20
@@ -29,6 +31,26 @@ const CanvasWrapper = styled.div`
     color: white;
     vertical-align: middle;
     line-height: ${canvasHeight};
+  }
+`
+
+const EditContainer = styled.div`
+  background: ${Colors.popup.bg};
+  margin-bottom: 10px;
+  user-select: none;
+  padding-left: 5px;
+  box-shadow: 0px 1px 6px black;
+
+  p {
+    display: inline-block;
+    padding: 10px;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+
+  img {
+    height: 30px;
+    vertical-align: middle;
   }
 `
 
@@ -106,6 +128,7 @@ class Create extends React.Component {
       topText: 'TOP TEXT',
       bottomText: 'BOTTOM TEXT',
       templates: '',
+      fontSize: 40,
       private: false,
       memeImageVisible: false,
       chooseTemplateOpen: false,
@@ -222,6 +245,7 @@ class Create extends React.Component {
               dataUrl={this.state.imageDataUrl}
               topText={this.state.topText}
               bottomText={this.state.bottomText}
+              fontSize={this.state.fontSize}
               image={this.state.image}
               imageHeight={this.state.finalHeight}
               imageWidth={this.state.finalImageWidth}
@@ -230,6 +254,14 @@ class Create extends React.Component {
             />
           </Stage>
         </CanvasWrapper>
+
+        {this.state.memeImageVisible &&
+          <EditContainer>
+            <p onClick={() => this.setState({fontSize: this.state.fontSize - 2})}>-</p>
+            <img src={fontSizeIcon} alt='' />
+            <p onClick={() => this.setState({fontSize: this.state.fontSize + 2})}>+</p>
+          </EditContainer>
+        }
 
         <SetImageContainer 
           style={{width: this.state.finalCanvasWidth, height: !this.state.memeImageVisible ? canvasHeight : '50px'}} 
