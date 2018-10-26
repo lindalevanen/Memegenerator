@@ -97,8 +97,12 @@ class Create extends React.Component {
     super(props)
     this.state = {
       image: '',
+      imageDataUrl: '',
       imageWidth: canvasWidth,
       imageHeight: canvasHeight,
+      finalImageWidth: canvasWidth,
+      finalCanvasWidth: canvasWidth,
+      finalHeight: canvasHeight,
       topText: 'TOP TEXT',
       bottomText: 'BOTTOM TEXT',
       templates: '',
@@ -167,35 +171,60 @@ class Create extends React.Component {
   }
 
   onImageDimensionChange = (width, height) => {
-    this.setState({ imageWidth: width, imageHeight: height})
+
+    //this.setState({ imageWidth: width, imageHeight: height})
   }
 
   chooseImage = (json) => {
     this.setState({image: json, chooseTemplateOpen: false})
+    this.onImageDimensionChange(json.width, json.height)
+    this.saveDataURL(json.url, json.width, json.height)
+  }
+
+  saveDataURL = (url, w, h) => {
+    var canvas = document.createElement("canvas");
+    const cWidth = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
+    const iWidth = w > cWidth ? cWidth : w
+    const height = iWidth * h / w
+    this.setState({finalImageWidth: iWidth, finalCanvasWidth: cWidth, finalHeight: height})
+    canvas.width = cWidth;
+    canvas.height = height;
+
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+
+    img.addEventListener("load", () => {
+      canvas.getContext("2d").drawImage(img, 0, 0, cWidth, height)
+      this.setState({imageDataUrl: canvas.toDataURL()})
+      //this.downloadURI(canvas.toDataURL(), 'meme.jpg');
+    });
+
+    img.setAttribute("src", url);
   }
 
   render() {
     // TODO: refactor these variables
-    const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
-    const height = (this.state.imageWidth > width ? width : this.state.imageWidth) * this.state.imageHeight / this.state.imageWidth
-    const ratio = width / canvasWidth
+    //const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
+    //const height = (this.state.imageWidth > width ? width : this.state.imageWidth) * this.state.imageHeight / this.state.imageWidth
+    const ratio = this.state.finalCanvasWidth / canvasWidth
 
     return (
       <CreateWrapper style={{maxWidth: canvasWidth}}>
         <CanvasWrapper>
           <Stage
             ref={ref => (this.stageRef = ref)}
-            width={width}
-            height={this.state.memeImageVisible ? height : 0}
+            width={this.state.finalCanvasWidth}
+            height={this.state.memeImageVisible ? this.state.finalHeight : 0}
             scale={{x: ratio, y: ratio}}
             visible={this.state.memeImageVisible}
           >
             <MemeImage
+              dataUrl={this.state.imageDataUrl}
               topText={this.state.topText}
               bottomText={this.state.bottomText}
               image={this.state.image}
-              imageHeight={height}
-              imageWidth={this.state.imageWidth > width ? width : this.state.imageWidth}
+              imageHeight={this.state.finalHeight}
+              imageWidth={this.state.finalImageWidth}
               imageDimensionChange={this.onImageDimensionChange}
               setImageVisible={(visible) => this.setState({memeImageVisible: visible})}
             />
@@ -203,7 +232,7 @@ class Create extends React.Component {
         </CanvasWrapper>
 
         <SetImageContainer 
-          style={{width: width, height: !this.state.memeImageVisible ? height : '50px'}} 
+          style={{width: this.state.finalCanvasWidth, height: !this.state.memeImageVisible ? canvasHeight : '50px'}} 
           onClick={() => this.setState({chooseTemplateOpen: true})}
         >
           <p>{!this.state.memeImageVisible ? "Choose image" : "Choose another"}</p>
@@ -222,13 +251,13 @@ class Create extends React.Component {
           </label>
         </MemeTextForm>
       
-        <CreateMemeButton /* TODO: fix: onClick={this.createMeme}*/>
-          <span>CREATE MEME (not yet implemented)</span>
+        <CreateMemeButton onClick={this.createMeme}>
+          <span>CREATE MEME</span>
         </CreateMemeButton>
 
         {this.state.chooseTemplateOpen &&
           <TemplateList
-            width={width}
+            width={this.state.finalCanvasWidth}
             closeList={() => this.setState({chooseTemplateOpen: false})}
             list={this.state.templates ? this.state.templates.memes : []}
             imageChosen={this.chooseImage}
@@ -237,7 +266,7 @@ class Create extends React.Component {
 
         {this.state.finishedMemeOpen &&
           <FinishedMeme
-            width={width}
+            width={this.state.finalCanvasWidth}
             closeList={() => this.setState({finishedMemeOpen: false})}
           />
         }

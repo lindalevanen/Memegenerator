@@ -1,12 +1,13 @@
 import React from 'react'
-import { Layer, Rect, Text, Image } from 'react-konva'
-
-//const meme = 'https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-icon.svg?v=6e4af45f4d66' //require('./memetemplate.jpg')
+import { Layer, Text, Image } from 'react-konva'
 
 const canvasWidth = 500
 const canvasHeight = 300
 
 class MemeImage extends React.Component {
+  layer = null
+  image = null
+
   state = {
     image: null,
     topTextX: null,
@@ -16,8 +17,8 @@ class MemeImage extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if(newProps.image !== this.props.image) {
-      this.loadImage(newProps.image.url)
+    if(newProps.dataUrl !== this.props.dataUrl) {
+      this.loadImage(newProps.dataUrl)
     }
     if(newProps.imageHeight !== this.props.imageHeight) {
       this.setState({bottomTextY: newProps.imageHeight - 60})
@@ -26,13 +27,17 @@ class MemeImage extends React.Component {
 
   loadImage(url) {
     const image = new window.Image();
-    image.src = url;
+    image.src = url
     image.setAttribute('crossOrigin', 'anonymous');
+    image.crossOrigin = "Anonymous";
+
     image.onload = () => {
       this.setState({
-        image: image
+        image: image,
+        topTextX: null,
+        topTextY: 20,
+        bottomTextX: null
       })
-      this.props.imageDimensionChange(image.width, image.height)
       this.props.setImageVisible(true)
     }
   }
@@ -73,24 +78,15 @@ class MemeImage extends React.Component {
 
   render() {
     return (
-      <Layer>
-        <Rect
-          width={this.props.imageWidth}
-          height={this.props.imageHeight}
-          fill={'#000000'}
-          shadowBlur={5}
-          onClick={this.handleClick}
-        />
+      <Layer ref={node => { this.layer = node }}>
         <Image
+          ref={node => { this.image = node }}
           image={this.state.image}
           width={this.props.imageWidth}
           height={this.props.imageHeight}
           x={
             this.state.image ? canvasWidth / 2 - this.props.imageWidth / 2 : 0
           }
-          ref={node => {
-            this.imageNode = node
-          }}
         />
         <Text 
           fill='white'

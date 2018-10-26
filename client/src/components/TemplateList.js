@@ -87,7 +87,6 @@ class TemplateList extends React.Component {
   }
 
   render() { 
-    console.log(this.props.width)
     return (
       <ViewContainer>
         <ChooseTemplateWrapper id='template-content' width={this.props.width}>
