@@ -89,8 +89,8 @@ const MemeTextForm = styled.form`
 const CreateMemeButton = styled.div`
   width: 100%;
   background: ${Colors.header.bg};
-  color: white;
-  cursor: pointer;
+  color: ${props => props.disabled ? 'gray' : 'white'};
+  cursor: ${props => props.disabled ? 'default' : 'pointer'};;
   font-weight: lighter;
   text-align: center;
   margin-top: 40px;
@@ -154,6 +154,8 @@ class Create extends React.Component {
     this.fetchTemplates()
     window.addEventListener('resize', this.handleResize)
     window.addEventListener('orientationchange', this.handleResize)
+    const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
+    this.setState({finalCanvasWidth: width})
   }
 
   componentWillUnmount() {
@@ -193,17 +195,12 @@ class Create extends React.Component {
     this.downloadURI(dataURL, 'meme.jpg');
   }
 
-  onImageDimensionChange = (width, height) => {
-
-    //this.setState({ imageWidth: width, imageHeight: height})
-  }
-
   chooseImage = (json) => {
     this.setState({image: json, chooseTemplateOpen: false})
-    this.onImageDimensionChange(json.width, json.height)
     this.saveDataURL(json.url, json.width, json.height)
   }
 
+  //TOOD: REFACTOR!
   saveDataURL = (url, w, h) => {
     var canvas = document.createElement("canvas");
     const cWidth = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
@@ -226,11 +223,6 @@ class Create extends React.Component {
   }
 
   render() {
-    // TODO: refactor these variables
-    //const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
-    //const height = (this.state.imageWidth > width ? width : this.state.imageWidth) * this.state.imageHeight / this.state.imageWidth
-    const ratio = this.state.finalCanvasWidth / canvasWidth
-
     return (
       <CreateWrapper style={{maxWidth: canvasWidth}}>
         <CanvasWrapper>
@@ -238,7 +230,6 @@ class Create extends React.Component {
             ref={ref => (this.stageRef = ref)}
             width={this.state.finalCanvasWidth}
             height={this.state.memeImageVisible ? this.state.finalHeight : 0}
-            scale={{x: ratio, y: ratio}}
             visible={this.state.memeImageVisible}
           >
             <MemeImage
@@ -249,6 +240,7 @@ class Create extends React.Component {
               image={this.state.image}
               imageHeight={this.state.finalHeight}
               imageWidth={this.state.finalImageWidth}
+              canvasWidth={this.state.finalCanvasWidth}
               imageDimensionChange={this.onImageDimensionChange}
               setImageVisible={(visible) => this.setState({memeImageVisible: visible})}
             />
@@ -283,7 +275,10 @@ class Create extends React.Component {
           </label>
         </MemeTextForm>
       
-        <CreateMemeButton onClick={this.createMeme}>
+        <CreateMemeButton
+          disabled={!this.state.memeImageVisible}
+          onClick={this.state.memeImageVisible ? this.createMeme : null}
+        >
           <span>CREATE MEME</span>
         </CreateMemeButton>
 
