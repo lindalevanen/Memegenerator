@@ -43,6 +43,7 @@ const EditContainer = styled.div`
 
   p {
     display: inline-block;
+    font-weight: bolder;
     padding: 10px;
     vertical-align: middle;
     cursor: pointer;
