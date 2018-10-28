@@ -151,12 +151,15 @@ class Create extends React.Component {
     }
   }
 
+  componentWillMount() {
+    const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
+    this.setState({finalCanvasWidth: width})
+  }
+
   componentDidMount() {
     this.fetchTemplates()
     window.addEventListener('resize', this.handleResize)
     window.addEventListener('orientationchange', this.handleResize)
-    const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
-    this.setState({finalCanvasWidth: width})
   }
 
   componentWillUnmount() {
