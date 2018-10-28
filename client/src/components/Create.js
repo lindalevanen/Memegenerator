@@ -257,9 +257,19 @@ class Create extends React.Component {
 
         {this.state.memeImageVisible &&
           <EditContainer>
-            <p onClick={() => this.setState({fontSize: this.state.fontSize - 2})}>-</p>
+            <p 
+              onClick={() => 
+                this.state.fontSize > 10 ? 
+                this.setState({fontSize: this.state.fontSize - 2})
+                : null }
+            > - </p>
             <img src={fontSizeIcon} alt='' />
-            <p onClick={() => this.setState({fontSize: this.state.fontSize + 2})}>+</p>
+            <p 
+              onClick={() => 
+                this.state.fontSize < 60 ?
+                this.setState({fontSize: this.state.fontSize + 2})
+                : null }
+            > + </p>
           </EditContainer>
         }
 

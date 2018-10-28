@@ -22,6 +22,14 @@ class MemeImage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const dif = this.props.canvasWidth / 2 - this.props.imageWidth / 2
+    this.setState({
+      topTextX: dif,
+      bottomTextX: dif
+    })
+  }
+
   loadImage(url) {
     const image = new window.Image();
     image.src = url
@@ -29,11 +37,12 @@ class MemeImage extends React.Component {
     image.crossOrigin = "Anonymous";
 
     image.onload = () => {
+      const dif = this.props.canvasWidth / 2 - this.props.imageWidth / 2
       this.setState({
         image: image,
-        topTextX: null,
+        topTextX: dif,
         topTextY: 20,
-        bottomTextX: null
+        bottomTextX: dif
       })
       this.props.setImageVisible(true)
     }
@@ -91,7 +100,7 @@ class MemeImage extends React.Component {
           y={this.state.topTextY}
           wrap="char"
           align="center"
-          width={this.props.canvasWidth}
+          width={this.props.imageWidth}
           text={this.props.topText}
           fontSize={this.props.fontSize}
           fontFamily='impact'
@@ -106,7 +115,7 @@ class MemeImage extends React.Component {
           y={this.state.bottomTextY}
           wrap="char"
           align="center"
-          width={this.props.canvasWidth}
+          width={this.props.imageWidth}
           text={this.props.bottomText}
           fontSize={this.props.fontSize}
           fontFamily='impact'
