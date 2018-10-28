@@ -82,7 +82,12 @@ class TemplateList extends React.Component {
 
   parseMemeJson(json) {
     return (
-      <img key={json.id} src={json.url} alt='' onClick={() => this.props.imageChosen(json)}/>
+      <img 
+        key={json.id} 
+        src={json.url} 
+        alt='' 
+        onClick={() => this.props.imageChosen(json)}
+      />
     )
   }
 
@@ -93,7 +98,7 @@ class TemplateList extends React.Component {
           <Header>
             <h3>Choose template</h3>
             <p onClick={this.props.closeList}>
-              &#x2715;
+              &#x2715;  {/* <- this is a cross-kinda icon */}
             </p>
           </Header>
           <ListWrapper>

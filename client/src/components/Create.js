@@ -13,6 +13,7 @@ const canvasWidth = 500
 const canvasHeight = 300
 const marginX = 20
 
+//TODO: move styles to a separate style file
 const CreateWrapper = styled.div`
   width: 100%;
   margin: auto;
@@ -118,6 +119,7 @@ class Create extends React.Component {
   
   constructor(props) {
     super(props)
+    //TODO: huge refactor, not all these values are even needed
     this.state = {
       image: '',
       imageDataUrl: '',
@@ -137,6 +139,7 @@ class Create extends React.Component {
     }
   }
 
+  //TODO: We might want to move this to TemplateList...
   TEMPLATE_API_URL = 'https://api.imgflip.com/get_memes'
 
   fetchTemplates = async () => {
@@ -227,6 +230,7 @@ class Create extends React.Component {
   }
 
   render() {
+    //TODO: refactor, we really dont want all of the components to be defined here (MemeTextForm could be a class)
     return (
       <CreateWrapper style={{maxWidth: canvasWidth}}>
         <CanvasWrapper>

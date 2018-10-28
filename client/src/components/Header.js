@@ -5,6 +5,7 @@ import { withRouter } from "react-router";
 
 import Colors from './../colors'
 
+//TODO: move styled-components to a style file
 const HeaderWrapper = styled.div`
   z-index: 1;
   position: fixed;
@@ -71,21 +72,21 @@ const Header = (props) => {
     : path === "/browse" ? "browse" : ""
 
   return (
-  <HeaderWrapper>
-    <HeaderContent>
-      <Link to='/create'>
-        <p id='logo'>MG</p>
-      </Link>
-      <NavItems>
-        <Link className={activeLocation === "create" ? "active" : ""} to='/create'>
-        	<p>Create</p>
+    <HeaderWrapper>
+      <HeaderContent>
+        <Link to='/create'>
+          <p id='logo'>MG</p>
         </Link>
-        <Link className={activeLocation === "browse" ? "active" : ""} to='/browse'>
-        	<p>Browse</p>
-      	</Link>
-      </NavItems>
-    </HeaderContent>
-  </HeaderWrapper>
+        <NavItems>
+          <Link className={activeLocation === "create" ? "active" : ""} to='/create'>
+          	<p>Create</p>
+          </Link>
+          <Link className={activeLocation === "browse" ? "active" : ""} to='/browse'>
+          	<p>Browse</p>
+        	</Link>
+        </NavItems>
+      </HeaderContent>
+    </HeaderWrapper>
   )
 }
 

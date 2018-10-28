@@ -35,6 +35,7 @@ const FinishedMemeWrapper = styled.div`
   }
 `
 
+//TODO: the whole class
 class FinishedMeme extends React.Component {
   componentDidMount() {
     window.addEventListener('mousedown', this.handleClick)
