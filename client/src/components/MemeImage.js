@@ -93,6 +93,7 @@ class MemeImage extends React.Component {
           x={
             this.state.image ? this.props.canvasWidth / 2 - this.props.imageWidth / 2 : 0
           }
+          preventDefault={false}
         />
         <Text 
           fill='white'

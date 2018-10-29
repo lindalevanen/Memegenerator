@@ -123,8 +123,6 @@ class Create extends React.Component {
     this.state = {
       image: '',
       imageDataUrl: '',
-      imageWidth: canvasWidth,
-      imageHeight: canvasHeight,
       finalImageWidth: canvasWidth,
       finalCanvasWidth: canvasWidth,
       finalHeight: canvasHeight,
@@ -155,23 +153,37 @@ class Create extends React.Component {
   }
 
   componentWillMount() {
-    const width = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
+    const width = this.getCanvasWidth()
     this.setState({finalCanvasWidth: width})
   }
 
   componentDidMount() {
     this.fetchTemplates()
     window.addEventListener('resize', this.handleResize)
-    window.addEventListener('orientationchange', this.handleResize)
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize)
-    window.addEventListener('orientationchange', this.handleResize)
+  }
+
+  getCanvasWidth() {
+    const aWidth = window.screen.availWidth
+    const iWidth = window.innerWidth
+    const viewWidth = aWidth < iWidth ? aWidth : iWidth
+    return (
+      ( viewWidth > canvasWidth + 2 * marginX ) ? canvasWidth
+      : ( viewWidth - 2 * marginX )
+    )
   }
 
   handleResize = () => {
-    this.setState(this.state);
+    const cWidth = this.getCanvasWidth()
+    this.setState({finalCanvasWidth: cWidth});
+    if(this.state.memeImageVisible) {
+      const iWidth = this.state.finalImageWidth > cWidth ? cWidth : this.state.finalImageWidth
+      const height = iWidth * this.state.finalHeight / this.state.finalImageWidth
+      this.setState({finalImageWidth: iWidth, finalHeight: height});
+    }
   }
 
   handleTopChange = event => {
@@ -203,29 +215,33 @@ class Create extends React.Component {
   }
 
   chooseImage = (json) => {
-    this.setState({image: json, chooseTemplateOpen: false})
+    this.setState({
+      image: json,
+      topText: 'TOP TEXT',
+      bottomText: 'BOTTOM TEXT',
+      chooseTemplateOpen: false
+    })
     this.saveDataURL(json.url, json.width, json.height)
   }
 
   //TOOD: REFACTOR!
-  saveDataURL = (url, w, h) => {
-    var canvas = document.createElement("canvas");
-    const cWidth = window.innerWidth > canvasWidth + 2 * marginX ? canvasWidth : window.innerWidth - 2 * marginX
-    const iWidth = w > cWidth ? cWidth : w
-    const height = iWidth * h / w
-    this.setState({finalImageWidth: iWidth, finalCanvasWidth: cWidth, finalHeight: height})
+  saveDataURL = (url, width, height) => {
+    // To create a canvas and get its dataurl to pass to MemeImage is a workaround for a Konva bug that won't
+    // let us get Konva canvas (Stage) dataUrl if the image is from a cross-domain source.
+    const canvas = document.createElement("canvas");
+    const cWidth = this.getCanvasWidth()
+    const iWidth = width > cWidth ? cWidth : width
+    const cHeight = iWidth * height / width
+    this.setState({finalImageWidth: iWidth, finalCanvasWidth: cWidth, finalHeight: cHeight})
     canvas.width = cWidth;
-    canvas.height = height;
+    canvas.height = cHeight;
 
     var img = new Image();
     img.crossOrigin = 'Anonymous';
-
     img.addEventListener("load", () => {
-      canvas.getContext("2d").drawImage(img, 0, 0, cWidth, height)
+      canvas.getContext("2d").drawImage(img, 0, 0, cWidth, cHeight)
       this.setState({imageDataUrl: canvas.toDataURL()})
-      //this.downloadURI(canvas.toDataURL(), 'meme.jpg');
     });
-
     img.setAttribute("src", url);
   }
 
@@ -274,7 +290,7 @@ class Create extends React.Component {
         }
 
         <SetImageContainer 
-          style={{width: this.state.finalCanvasWidth, height: !this.state.memeImageVisible ? canvasHeight : '50px'}} 
+          style={{width: '100%', height: !this.state.memeImageVisible ? canvasHeight : '50px'}} 
           onClick={() => this.setState({chooseTemplateOpen: true})}
         >
           <p>{!this.state.memeImageVisible ? "Choose image" : "Choose another"}</p>
@@ -302,6 +318,7 @@ class Create extends React.Component {
 
         {this.state.chooseTemplateOpen &&
           <TemplateList
+            maxWidth={this.state.finalCanvasWidth + 100}
             width={this.state.finalCanvasWidth}
             closeList={() => this.setState({chooseTemplateOpen: false})}
             list={this.state.templates ? this.state.templates.memes : []}

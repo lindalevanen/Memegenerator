@@ -19,8 +19,9 @@ const ChooseTemplateWrapper = styled.div`
   position: relative;
   clickable: false;
   z-index: 2;
-  width: ${props => props.width + "px"};
-  height: 800px;
+  width: 100%;
+  max-width: ${props => props.maxWidth + "px"};
+  height: auto;
   max-height: ${window.innerHeight - 40 + "px"};
   top: 20px;
   margin: auto;
@@ -94,7 +95,7 @@ class TemplateList extends React.Component {
   render() { 
     return (
       <ViewContainer>
-        <ChooseTemplateWrapper id='template-content' width={this.props.width}>
+        <ChooseTemplateWrapper id='template-content' maxWidth={this.props.maxWidth}>
           <Header>
             <h3>Choose template</h3>
             <p onClick={this.props.closeList}>
