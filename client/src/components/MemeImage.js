@@ -99,9 +99,9 @@ class MemeImage extends React.Component {
           fill='white'
           x={this.state.topTextX}
           y={this.state.topTextY}
-          wrap="char"
+          wrap="word"
           align="center"
-          width={this.props.imageWidth - 15}
+          width={this.props.imageWidth - 30}
           text={this.props.topText}
           fontSize={this.props.fontSize}
           fontFamily='impact'
@@ -114,9 +114,9 @@ class MemeImage extends React.Component {
           fill='white' 
           x={this.state.bottomTextX}
           y={this.state.bottomTextY}
-          wrap="char"
+          wrap="word"
           align="center"
-          width={this.props.imageWidth - 15}
+          width={this.props.imageWidth - 30}
           text={this.props.bottomText}
           fontSize={this.props.fontSize}
           fontFamily='impact'
