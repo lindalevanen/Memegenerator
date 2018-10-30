@@ -76,6 +76,10 @@ const MemeTextForm = styled.form`
     margin-left: 10px;
   }
 
+  .chooseFile {
+    background: ${Colors.main.bg};
+  }
+
   label {
     display: block; 
     margin-bottom: 10px;
@@ -105,11 +109,39 @@ const SetImageContainer = styled.div`
   align-items: center;
   text-align: center;
   color: white;
-  border: 1px solid gray;
   cursor: pointer;
 
-  p {
-    width: 100%;
+
+  .half {
+    flex: 1;
+    border: 1px solid gray;
+    height: 100%;
+    align-content: center;
+    max-width: 50%;
+    display: table; 
+    vertical-align: middle;
+
+    input {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+
+    .content {
+      padding: 10px;
+      display: table-cell;
+      height: 100%;
+      width: 100%;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    p {
+      white-space: pre-line;
+    }
   }
 `
 
@@ -245,6 +277,29 @@ class Create extends React.Component {
     img.setAttribute("src", url);
   }
 
+  handleImage = (e) => {
+    const canvas = document.createElement("canvas"); 
+    var reader = new FileReader();
+
+    reader.onload = (event) => {
+      var img = new Image();
+      img.onload = () => {
+        const cWidth = this.getCanvasWidth()
+        const iWidth = img.width > cWidth ? cWidth : img.width
+        const cHeight = iWidth * img.height / img.width
+        this.setState({finalImageWidth: iWidth, finalCanvasWidth: cWidth, finalHeight: cHeight})
+        canvas.width = cWidth;
+        canvas.height = cHeight;
+
+        canvas.getContext("2d").drawImage(img, 0, 0, cWidth, cHeight)
+        this.setState({imageDataUrl: canvas.toDataURL()})
+      }
+      img.src = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);     
+  }
+
+
   render() {
     //TODO: refactor, we really dont want all of the components to be defined here (MemeTextForm could be a class)
     return (
@@ -273,27 +328,48 @@ class Create extends React.Component {
 
         {this.state.memeImageVisible &&
           <EditContainer>
-            <p 
-              onClick={() => 
-                this.state.fontSize > 10 ? 
-                this.setState({fontSize: this.state.fontSize - 2})
-                : null }
-            > - </p>
-            <img src={fontSizeIcon} alt='' />
-            <p 
-              onClick={() => 
-                this.state.fontSize < 60 ?
-                this.setState({fontSize: this.state.fontSize + 2})
-                : null }
-            > + </p>
+            <div>
+              <p 
+                onClick={() => 
+                  this.state.fontSize > 10 ? 
+                  this.setState({fontSize: this.state.fontSize - 2})
+                  : null }
+              > - </p>
+              <img src={fontSizeIcon} alt='' />
+              <p 
+                onClick={() => 
+                  this.state.fontSize < 60 ?
+                  this.setState({fontSize: this.state.fontSize + 2})
+                  : null }
+              > + </p>
+            </div>
+            {/*<div>
+              <p 
+                onClick={() => 
+                  this.state.fontSize > 10 ? 
+                  this.setState({fontSize: this.state.fontSize - 2})
+                  : null }
+              > decrease </p>
+              <p 
+                onClick={() => 
+                  this.state.fontSize < 60 ?
+                  this.setState({fontSize: this.state.fontSize + 2})
+                  : null }
+              > increase </p>
+            </div>*/}
           </EditContainer>
         }
 
         <SetImageContainer 
-          style={{width: '100%', height: !this.state.memeImageVisible ? canvasHeight : '50px'}} 
-          onClick={() => this.setState({chooseTemplateOpen: true})}
+          style={{width: '100%', height: !this.state.memeImageVisible ? canvasHeight : '80px'}}
         >
-          <p>{!this.state.memeImageVisible ? "Choose image" : "Choose another"}</p>
+          <div className="half" onClick={() => this.setState({chooseTemplateOpen: true})}>
+            <p className="content">Choose image from {'\n'} template</p>
+          </div>
+          <div className="half">
+            <label htmlFor="file" className="content"> Upload image </label>
+            <input type="file" id="file" className="chooseFile" onChange={this.handleImage} />
+          </div>
         </SetImageContainer>
 
         <MemeTextForm>
@@ -304,7 +380,7 @@ class Create extends React.Component {
             <input type="text" name="bottomText" placeholder="Bottom text" onChange={this.handleBottomChange} />
           </label>
           <label>
-            <input className="private" type="checkbox" name="privateCheck" onChange={this.handlePrivateChange} />
+            <input type="checkbox" className="private" name="privateCheck" onChange={this.handlePrivateChange} />
             <span>Private</span>
           </label>
         </MemeTextForm>

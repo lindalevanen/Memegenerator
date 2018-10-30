@@ -101,7 +101,7 @@ class MemeImage extends React.Component {
           y={this.state.topTextY}
           wrap="char"
           align="center"
-          width={this.props.imageWidth}
+          width={this.props.imageWidth - 15}
           text={this.props.topText}
           fontSize={this.props.fontSize}
           fontFamily='impact'
@@ -116,7 +116,7 @@ class MemeImage extends React.Component {
           y={this.state.bottomTextY}
           wrap="char"
           align="center"
-          width={this.props.imageWidth}
+          width={this.props.imageWidth - 15}
           text={this.props.bottomText}
           fontSize={this.props.fontSize}
           fontFamily='impact'
