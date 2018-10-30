@@ -10,7 +10,7 @@ import Colors from './../colors'
 const fontSizeIcon = require('../images/font_icon.png')
 
 const canvasWidth = 500
-const canvasHeight = 300
+const canvasHeight = 200
 const marginX = 20
 
 //TODO: move styles to a separate style file
