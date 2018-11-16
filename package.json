@@ -9,7 +9,12 @@
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "@google-cloud/storage": "^2.3.0",
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.2",
+    "firebase-admin": "^6.1.0",
+    "multer": "^1.4.1"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"
