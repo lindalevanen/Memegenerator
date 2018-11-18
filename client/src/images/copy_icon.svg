@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="30px" viewBox="0 0 26 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.1 (29687) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_content_copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="create_finished" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.87">
+        <g id="create,-finished" transform="translate(-596.000000, -832.000000)" fill="#6EFFF8">
+            <g id="ic_content_copy" transform="translate(596.000000, 832.000000)">
+                <g id="Icon-24px">
+                    <path d="M18.6666667,0 L2.66666667,0 C1.2,0 0,1.2 0,2.66666667 L0,21.3333333 L2.66666667,21.3333333 L2.66666667,2.66666667 L18.6666667,2.66666667 L18.6666667,0 L18.6666667,0 Z M22.6666667,5.33333333 L8,5.33333333 C6.53333333,5.33333333 5.33333333,6.53333333 5.33333333,8 L5.33333333,26.6666667 C5.33333333,28.1333333 6.53333333,29.3333333 8,29.3333333 L22.6666667,29.3333333 C24.1333333,29.3333333 25.3333333,28.1333333 25.3333333,26.6666667 L25.3333333,8 C25.3333333,6.53333333 24.1333333,5.33333333 22.6666667,5.33333333 L22.6666667,5.33333333 Z M22.6666667,26.6666667 L8,26.6666667 L8,8 L22.6666667,8 L22.6666667,26.6666667 L22.6666667,26.6666667 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

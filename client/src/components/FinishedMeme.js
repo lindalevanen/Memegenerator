@@ -2,67 +2,116 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Colors from './../colors'
+const copyIcon = require('../images/copy_icon.svg')
 
-const ViewContainer = styled.div`
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.35);
+const FinishedMemeContainer = styled.div`
+  .memeImage {
+    background-color: black;
+    height: 300px;
+    display: block;
+    max-height: 400px;
+    margin: auto;
+  }
 `
 
-const FinishedMemeWrapper = styled.div`
-  position: relative;
-  clickable: false;
-  z-index: 2;
-  width: ${props => props.width + "px"};
-  height: 800px;
-  max-height: ${window.innerHeight - 40 + "px"};
-  top: 20px;
-  margin: auto;
-  background: ${Colors.popup.bg};
-  box-shadow: 3px 3px 6px black;
+const UrlField = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 30px;
 
-  p {
-    float: right;
-    padding: 20px;
+  align-text: middle;
+  align-items: center;
+  justify-content: center;
+
+  .title {
+    padding-right: 10px;
+  }
+
+  .copy {
+    padding: 10px;
     cursor: pointer;
-    font-size: 20px;
-    color: ${Colors.accent}
+  }
+  
+  .url {
+    padding: 10px;
+    max-width: 85%;
+    background-color: ${Colors.main.lightAccent};
+
+    .text {
+      min-width: 0;
+      overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+  }
+`
+
+const HalfAndHalf = styled.div`
+  div {
+    width: 50%;
+    height: 80px;
+    align-text: middle;
+    color: ${Colors.accent};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 2px solid ${Colors.main.lightAccent};
+    cursor: pointer;
+  }
+
+  .first {
+    border-right: 2px solid ${Colors.main.lightAccent};
   }
 `
 
 //TODO: the whole class
 class FinishedMeme extends React.Component {
-  componentDidMount() {
-    window.addEventListener('mousedown', this.handleClick)
-  }
 
-  componentWillUnmount() {
-    window.removeEventListener('mousedown', this.handleClick)
-  }
+  copyToClipboard = () => {
+    var textArea = document.createElement("textarea");
+    textArea.value = this.props.url;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
 
-  handleClick = e => {
-    const container = document.getElementById('meme-content')  
-    if (container && !container.contains(e.target)) { // i.e click outside the view
-      this.props.closeList()
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
     }
+
+    document.body.removeChild(textArea);
   }
 
   // possible share functionality: https://www.npmjs.com/package/react-share
-  render() { 
+  render() {
     return (
-      <ViewContainer>
-        <FinishedMemeWrapper id='meme-content' width={this.props.width}>
-          <p onClick={this.props.closeList} >
-            X 
-          </p>
+      <FinishedMemeContainer>
 
-        </FinishedMemeWrapper>
-      </ViewContainer>
+        <img className="memeImage" src={this.props.url} alt="meme" />
+
+        <UrlField>
+          <p className="title">url:</p> 
+          <div className="url">
+            <div className="text">
+              {this.props.url ? this.props.url : "https://www.firebaseapp.com/34534ugj5jgijeoigjg3joejiojefoe4hogeo5ngoe4ngoe4inge/oi4jtoienrgeu4nf"}
+            </div>
+          </div>
+          <img className="copy" src={copyIcon} alt="copy" onClick={this.copyToClipboard} />
+        </UrlField>
+        
+
+        <HalfAndHalf>
+          <div className="first" onClick={this.props.onCreateAnother}>
+            Create another
+          </div>
+          <div className="second" onClick={this.props.onDownload}>
+            Download
+          </div>
+        </HalfAndHalf>
+      </FinishedMemeContainer>
     )
   }
 }

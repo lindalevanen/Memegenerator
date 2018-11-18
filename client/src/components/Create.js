@@ -5,7 +5,12 @@ import { Stage } from 'react-konva'
 import MemeImage from './MemeImage'
 import TemplateList from './TemplateList'
 import FinishedMeme from './FinishedMeme'
+import ModalWrapper from './ModalWrapper'
 import Colors from './../colors'
+
+//const b64toBlob = require('b64-to-blob');
+
+const isLoggedIn = false
 
 const fontSizeIcon = require('../images/font_icon.png')
 
@@ -165,7 +170,8 @@ class Create extends React.Component {
       private: false,
       memeImageVisible: false,
       chooseTemplateOpen: false,
-      finishedMemeOpen: false
+      finishedMemeOpen: false,
+      url: ''
     }
   }
 
@@ -232,18 +238,75 @@ class Create extends React.Component {
 
   // function from https://stackoverflow.com/a/15832662/512042
   downloadURI = (uri, name) => {
-      var link = document.createElement("a");
-      link.download = name;
-      link.href = uri;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      var link = document.createElement("a")
+      link.download = name
+      link.href = uri
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
       //delete link;  // cant do this and idk if its bad to not do this...
   }
 
-  createMeme = () => {
+  downloadMeme = () => {
     var dataURL = this.stageRef.getStage().toDataURL();
     this.downloadURI(dataURL, 'meme.jpg');
+  }
+
+  createAnother = () => {
+    this.setState({
+      finishedMemeOpen: false,
+    })
+  }
+
+  createMeme = () => {
+    const dataURL = this.stageRef.getStage().toDataURL()
+    const blob = this.dataURItoBlob(dataURL)
+    var fd = new FormData()
+    fd.append("image", blob)
+    fd.append("priva", this.state.private)
+    if(isLoggedIn) {
+      fd.append("userId", 12345)  // TODO: add userid when we have that
+    }
+
+    fetch('/createMeme', {
+      method: 'POST',
+      body: fd
+    }).then(
+      response => {
+        if(response.status === 200) {
+          return response.json()
+        } else {
+          alert("Something went wrong..."+ response.statusText)
+        }
+      }
+    ).then(
+      data => {
+        this.setState({finishedMemeOpen: true, url: data.message.url})
+      }
+    ).catch(
+      error => console.log(error) // Handle the error response object
+    );
+  }
+
+  // From: https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
+  dataURItoBlob = (dataURI) => {
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(dataURI.split(',')[1]);
+    else
+        byteString = unescape(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ia], {type:mimeString});
   }
 
   chooseImage = (json) => {
@@ -393,20 +456,32 @@ class Create extends React.Component {
         </CreateMemeButton>
 
         {this.state.chooseTemplateOpen &&
-          <TemplateList
+          <ModalWrapper
             maxWidth={this.state.finalCanvasWidth + 100}
-            width={this.state.finalCanvasWidth}
             closeList={() => this.setState({chooseTemplateOpen: false})}
-            list={this.state.templates ? this.state.templates.memes : []}
-            imageChosen={this.chooseImage}
-          />
+            title="Choose template"
+          >
+            <TemplateList
+              width={this.state.finalCanvasWidth}
+              list={this.state.templates ? this.state.templates.memes : []}
+              imageChosen={this.chooseImage}
+            />
+          </ModalWrapper>
         }
 
         {this.state.finishedMemeOpen &&
-          <FinishedMeme
-            width={this.state.finalCanvasWidth}
+          <ModalWrapper
+            maxWidth={this.state.finalCanvasWidth + 100}
             closeList={() => this.setState({finishedMemeOpen: false})}
-          />
+            title="Here's your finished meme!"
+          >
+            <FinishedMeme
+              width={this.state.finalCanvasWidth}
+              url={this.state.url}
+              onCreateAnother={this.createAnother}
+              onDownload={this.downloadMeme}
+            />
+          </ModalWrapper>
         }
       </CreateWrapper>
     )
