@@ -1,6 +1,7 @@
 const Colors = {
   main: {
-    bg: '#252525'
+    bg: '#252525',
+    lightAccent: '#737373'
   },
   header: {
     bg: '#171717',

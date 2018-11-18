@@ -5,6 +5,7 @@ import { Stage } from 'react-konva'
 import MemeImage from './MemeImage'
 import TemplateList from './TemplateList'
 import FinishedMeme from './FinishedMeme'
+import ModalWrapper from './ModalWrapper'
 import Colors from './../colors'
 
 //const b64toBlob = require('b64-to-blob');
@@ -169,7 +170,8 @@ class Create extends React.Component {
       private: false,
       memeImageVisible: false,
       chooseTemplateOpen: false,
-      finishedMemeOpen: false
+      finishedMemeOpen: false,
+      url: ''
     }
   }
 
@@ -245,6 +247,17 @@ class Create extends React.Component {
       //delete link;  // cant do this and idk if its bad to not do this...
   }
 
+  downloadMeme = () => {
+    var dataURL = this.stageRef.getStage().toDataURL();
+    this.downloadURI(dataURL, 'meme.jpg');
+  }
+
+  createAnother = () => {
+    this.setState({
+      finishedMemeOpen: false,
+    })
+  }
+
   createMeme = () => {
     const dataURL = this.stageRef.getStage().toDataURL()
     const blob = this.dataURItoBlob(dataURL)
@@ -261,12 +274,14 @@ class Create extends React.Component {
     }).then(
       response => {
         if(response.status === 200) {
-          alert("Meme created successfully")
-          console.log(response)
-          console.log(response.body)
+          return response.json()
         } else {
           alert("Something went wrong..."+ response.statusText)
         }
+      }
+    ).then(
+      data => {
+        this.setState({finishedMemeOpen: true, url: data.message.url})
       }
     ).catch(
       error => console.log(error) // Handle the error response object
@@ -292,7 +307,7 @@ class Create extends React.Component {
     }
 
     return new Blob([ia], {type:mimeString});
-}
+  }
 
   chooseImage = (json) => {
     this.setState({
@@ -441,20 +456,32 @@ class Create extends React.Component {
         </CreateMemeButton>
 
         {this.state.chooseTemplateOpen &&
-          <TemplateList
+          <ModalWrapper
             maxWidth={this.state.finalCanvasWidth + 100}
-            width={this.state.finalCanvasWidth}
             closeList={() => this.setState({chooseTemplateOpen: false})}
-            list={this.state.templates ? this.state.templates.memes : []}
-            imageChosen={this.chooseImage}
-          />
+            title="Choose template"
+          >
+            <TemplateList
+              width={this.state.finalCanvasWidth}
+              list={this.state.templates ? this.state.templates.memes : []}
+              imageChosen={this.chooseImage}
+            />
+          </ModalWrapper>
         }
 
         {this.state.finishedMemeOpen &&
-          <FinishedMeme
-            width={this.state.finalCanvasWidth}
+          <ModalWrapper
+            maxWidth={this.state.finalCanvasWidth + 100}
             closeList={() => this.setState({finishedMemeOpen: false})}
-          />
+            title="Here's your finished meme!"
+          >
+            <FinishedMeme
+              width={this.state.finalCanvasWidth}
+              url={this.state.url}
+              onCreateAnother={this.createAnother}
+              onDownload={this.downloadMeme}
+            />
+          </ModalWrapper>
         }
       </CreateWrapper>
     )
