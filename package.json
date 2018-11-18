@@ -14,7 +14,8 @@
     "ejs": "^2.6.1",
     "express": "^4.16.2",
     "firebase-admin": "^6.1.0",
-    "multer": "^1.4.1"
+    "multer": "^1.4.1",
+    "uuid-v4": "^0.1.0"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"

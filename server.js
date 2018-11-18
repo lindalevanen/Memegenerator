@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 const bodyParser = require('body-parser')
 const Multer  = require('multer')
+const UUID = require("uuid-v4");
 
 app.engine('html', require('ejs').renderFile);
 
@@ -43,8 +44,6 @@ app.use(bodyParser())
 
 app.post('/createMeme', mult.single('image'), function(req, res){
   const memeFile = req.file
-  console.log("req body:")
-  console.log(req.body)
   const { userId, priva } = req.body
   if(memeFile) {
     const postRef = db.ref('/posts').push()
@@ -68,9 +67,7 @@ app.post('/createMeme', mult.single('image'), function(req, res){
             message: error
           });
         } else {
-          console.log("whooooo")
-          console.log(data.url)
-          res.status(200).send({
+          res.status(200).json({
             status: 'success',
             message: {
               url: data.url
@@ -96,10 +93,14 @@ const uploadImageToStorage = (file, postId) => {
     }
     const currentTime = Date.now();
     const fileUpload = bucket.file("memeImages/"+postId);
+    const uuid = UUID();
 
     const blobStream = fileUpload.createWriteStream({
       metadata: {
-        contentType: file.mimetype
+        contentType: file.mimetype,
+        metadata: {
+          firebaseStorageDownloadTokens: uuid
+        }
       }
     });
 
@@ -109,7 +110,8 @@ const uploadImageToStorage = (file, postId) => {
 
     blobStream.on('finish', () => {
       const data = {
-        url: `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`,
+        //url: `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`,
+        url: "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(fileUpload.name) + "?alt=media&token=" + uuid,
         time: currentTime
       }
       resolve(data);
@@ -126,13 +128,11 @@ app.get('/meme/:postId', function(req, res) {
   console.log(postId)
   var ref = db.ref("posts/" + postId);
 
-  
-  
-
   ref.on("value", function(snapshot) {
     const data = snapshot.val()
     if(data) {
       const file = bucket.file('memeImages/' + postId);
+
       /*const ref = admin.storage().ref().child('memeImages/' + postId)
 
       ref.getDownloadURL().then(function(url) {
@@ -140,8 +140,6 @@ app.get('/meme/:postId', function(req, res) {
       }).catch(function(error) {
         console.log(error)
       });*/
-      console.log("file:")
-      console.log(file)
       if(file) {
         file.getSignedUrl({
           action: 'read',
