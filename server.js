@@ -17,8 +17,8 @@ if (process.env.NODE_ENV === "production") {
   })
 }
 
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+//app.engine('html', require('ejs').renderFile);
+//app.set('view engine', 'html');
 
 /* To handle file upload */
 const mult = Multer({
@@ -30,7 +30,7 @@ const mult = Multer({
 
 /* FB initialization (Admin) */
 var admin = require("firebase-admin");
-var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g-1cf401ab0d.json");
+//var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g-0bc5b29c41.json");
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -40,9 +40,13 @@ admin.initializeApp({
   }),
   databaseURL: process.env.FIREBASE_DATABASE_URL,
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-  /*databaseURL: "https://memegenerator-cbece.firebaseio.com",
-  storageBucket: "memegenerator-cbece.appspot.com"*/
 });
+
+/*admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://memegenerator-cbece.firebaseio.com",
+  storageBucket: "memegenerator-cbece.appspot.com"
+})*/
 
 /* Reference to storage */
 const bucket = admin.storage().bucket();
