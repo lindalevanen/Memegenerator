@@ -33,9 +33,15 @@ var admin = require("firebase-admin");
 var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g-1cf401ab0d.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://memegenerator-cbece.firebaseio.com",
-  storageBucket: "memegenerator-cbece.appspot.com"
+  credential: admin.credential.cert({
+    "projectId": process.env.FIREBASE_PROJECT_ID,
+    "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    "clientEmail": process.env.FIREBASE_CLIENT_EMAIL,
+  }),
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET
+  /*databaseURL: "https://memegenerator-cbece.firebaseio.com",
+  storageBucket: "memegenerator-cbece.appspot.com"*/
 });
 
 /* Reference to storage */
@@ -172,10 +178,5 @@ const uploadImageToStorage = (file, postId) => {
   });
 });*/
 
-
-// Handle React routing, return all requests to React app
-app.get("*", function(req, res) {
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
-});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
