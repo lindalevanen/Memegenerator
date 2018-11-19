@@ -10,8 +10,8 @@ app.engine('html', require('ejs').renderFile);
 
 app.set('view engine', 'html');
 // Serve any static files
-//app.use(express.static(path.join(__dirname, "client/build")));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "client/build")));
+//app.use(express.static(path.join(__dirname, 'public')));
 
 //const memeView = require('./views/index.html');
 
@@ -122,7 +122,7 @@ const uploadImageToStorage = (file, postId) => {
   return promise;
 }
 
-app.get('/meme/:postId', function(req, res) {
+/*app.get('/meme/:postId', function(req, res) {
   const postId = req.params.postId
   console.log("postId:")
   console.log(postId)
@@ -140,7 +140,7 @@ app.get('/meme/:postId', function(req, res) {
       }).catch(function(error) {
         console.log(error)
       });*/
-      if(file) {
+      /*if(file) {
         file.getSignedUrl({
           action: 'read',
           expires: '03-09-2400'
@@ -165,7 +165,7 @@ app.get('/meme/:postId', function(req, res) {
   }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
   });
-});
+});*/
 
 
 // Handle React routing, return all requests to React app
