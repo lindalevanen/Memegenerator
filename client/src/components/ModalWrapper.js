@@ -21,6 +21,7 @@ const ViewContent = styled.div`
   max-width: ${props => props.maxWidth + "px"};
   height: auto;
   max-height: ${window.innerHeight - 40 + "px"};
+  min-height: 400px;
   top: 20px;
   margin: auto;
   padding-top: 10px;

@@ -171,6 +171,7 @@ class Create extends React.Component {
       memeImageVisible: false,
       chooseTemplateOpen: false,
       finishedMemeOpen: false,
+      loadingFinishedMeme: true,
       url: ''
     }
   }
@@ -268,6 +269,8 @@ class Create extends React.Component {
       fd.append("userId", 12345)  // TODO: add userid when we have that
     }
 
+    this.setState({finishedMemeOpen: true})
+
     fetch('/createMeme', {
       method: 'POST',
       body: fd
@@ -281,7 +284,7 @@ class Create extends React.Component {
       }
     ).then(
       data => {
-        this.setState({finishedMemeOpen: true, url: data.message.url})
+        this.setState({loadingFinishedMeme: false, url: data.message.url})
       }
     ).catch(
       error => console.log(error) // Handle the error response object
@@ -473,9 +476,10 @@ class Create extends React.Component {
           <ModalWrapper
             maxWidth={this.state.finalCanvasWidth + 100}
             closeList={() => this.setState({finishedMemeOpen: false})}
-            title="Here's your finished meme!"
+            title="Your finished meme!"
           >
             <FinishedMeme
+              loading={this.state.loadingFinishedMeme}
               width={this.state.finalCanvasWidth}
               url={this.state.url}
               onCreateAnother={this.createAnother}

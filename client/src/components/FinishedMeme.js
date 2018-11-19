@@ -3,16 +3,26 @@ import styled from 'styled-components'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css'; 
 
+import { css } from 'react-emotion';
+import { BeatLoader } from 'react-spinners';
+
+
 import Colors from './../colors'
 const copyIcon = require('../images/copy_icon.svg')
 
 const FinishedMemeContainer = styled.div`
-  .memeImage {
-    background-color: black;
-    height: 300px;
-    display: block;
+
+`
+
+const MemeImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+
+  .image {
+    z-index: 10;
     max-height: 400px;
-    margin: auto;
   }
 `
 
@@ -36,7 +46,9 @@ const UrlField = styled.div`
   
   .url {
     padding: 10px;
+    width: 100%;
     max-width: 85%;
+    text-align: center;
     background-color: ${Colors.main.lightAccent};
 
     .text {
@@ -66,6 +78,18 @@ const HalfAndHalf = styled.div`
   }
 `
 
+const LoaderWrapper = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+`
+
+const override = css`
+  position: absolute;
+`;
+
+
 //TODO: the whole class
 class FinishedMeme extends React.Component {
 
@@ -94,14 +118,23 @@ class FinishedMeme extends React.Component {
   render() {
     return (
       <FinishedMemeContainer>
-
-        <img className="memeImage" src={this.props.url} alt="meme" />
+        
+        <MemeImageWrapper>
+          {this.props.url && <img className="image" src={this.props.url} alt="meme" /> }
+          <BeatLoader
+            className={override}
+            sizeUnit={"px"}
+            size={10}
+            color={Colors.accent}
+            loading={true}
+          />
+        </MemeImageWrapper>
 
         <UrlField>
           <p className="title">url:</p> 
           <div className="url">
             <div className="text">
-              {this.props.url ? this.props.url : "https://www.firebaseapp.com/34534ugj5jgijeoigjg3joejiojefoe4hogeo5ngoe4ngoe4inge/oi4jtoienrgeu4nf"}
+              {this.props.url ? this.props.url : "..."}
             </div>
           </div>
           <img className="copy" src={copyIcon} alt="copy" onClick={this.copyUrlToClipboard} />
@@ -115,7 +148,7 @@ class FinishedMeme extends React.Component {
             Download
           </div>
         </HalfAndHalf>
-        
+
         <ToastContainer
           autoClose={2000}
           hideProgressBar={true}
