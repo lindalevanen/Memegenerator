@@ -15,7 +15,10 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
-    "styled-components": "^3.4.10"
+    "react-toastify": "^4.4.3",
+    "react-toasts": "^2.0.14",
+    "styled-components": "^3.4.10",
+    "toastr": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

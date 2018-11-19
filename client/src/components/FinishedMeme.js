@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css'; 
 
 import Colors from './../colors'
 const copyIcon = require('../images/copy_icon.svg')
@@ -67,7 +69,7 @@ const HalfAndHalf = styled.div`
 //TODO: the whole class
 class FinishedMeme extends React.Component {
 
-  copyToClipboard = () => {
+  copyUrlToClipboard = () => {
     var textArea = document.createElement("textarea");
     textArea.value = this.props.url;
     document.body.appendChild(textArea);
@@ -76,10 +78,13 @@ class FinishedMeme extends React.Component {
 
     try {
       var successful = document.execCommand('copy');
-      var msg = successful ? 'successful' : 'unsuccessful';
-      console.log('Fallback: Copying text command was ' + msg);
+      if(successful) {
+        toast('Url copied to clipboard!')
+      } else {
+        toast('Something went wrong when copying the url...')
+      }
     } catch (err) {
-      console.error('Fallback: Oops, unable to copy', err);
+      toast(err)
     }
 
     document.body.removeChild(textArea);
@@ -99,9 +104,8 @@ class FinishedMeme extends React.Component {
               {this.props.url ? this.props.url : "https://www.firebaseapp.com/34534ugj5jgijeoigjg3joejiojefoe4hogeo5ngoe4ngoe4inge/oi4jtoienrgeu4nf"}
             </div>
           </div>
-          <img className="copy" src={copyIcon} alt="copy" onClick={this.copyToClipboard} />
+          <img className="copy" src={copyIcon} alt="copy" onClick={this.copyUrlToClipboard} />
         </UrlField>
-        
 
         <HalfAndHalf>
           <div className="first" onClick={this.props.onCreateAnother}>
@@ -111,6 +115,12 @@ class FinishedMeme extends React.Component {
             Download
           </div>
         </HalfAndHalf>
+        
+        <ToastContainer
+          autoClose={2000}
+          hideProgressBar={true}
+          removeCloseButton={true}
+        />
       </FinishedMemeContainer>
     )
   }
