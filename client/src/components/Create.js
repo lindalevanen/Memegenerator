@@ -279,7 +279,7 @@ class Create extends React.Component {
         if(response.status === 200) {
           return response.json()
         } else {
-          alert("Something went wrong..."+ response.statusText)
+          throw Error(response)
         }
       }
     ).then(
@@ -287,7 +287,10 @@ class Create extends React.Component {
         this.setState({loadingFinishedMeme: false, url: data.message.url})
       }
     ).catch(
-      error => console.log(error) // Handle the error response object
+      error => {
+        console.log(error.statusText) // Handle the error response object
+        alert("Something went wrong...")
+      } 
     );
   }
 
@@ -476,7 +479,7 @@ class Create extends React.Component {
           <ModalWrapper
             maxWidth={this.state.finalCanvasWidth + 100}
             closeList={() => this.setState({finishedMemeOpen: false})}
-            title="Your finished meme!"
+            title={this.state.url ? "Your finished meme!" : " "}
           >
             <FinishedMeme
               loading={this.state.loadingFinishedMeme}

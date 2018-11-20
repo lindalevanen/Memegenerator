@@ -78,13 +78,6 @@ const HalfAndHalf = styled.div`
   }
 `
 
-const LoaderWrapper = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 300px;
-`
-
 const override = css`
   position: absolute;
 `;

@@ -32,6 +32,7 @@ const ViewContent = styled.div`
 
 const Header = styled.div`
   width: 100%;
+  min-height: 60px;
 
   h3 {
     color: white;
