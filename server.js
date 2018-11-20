@@ -17,9 +17,6 @@ if (process.env.NODE_ENV === "production") {
   })
 }
 
-//app.engine('html', require('ejs').renderFile);
-//app.set('view engine', 'html');
-
 /* To handle file upload */
 const mult = Multer({
   storage: Multer.memoryStorage(),
@@ -30,9 +27,9 @@ const mult = Multer({
 
 /* FB initialization (Admin) */
 var admin = require("firebase-admin");
-//var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g-0bc5b29c41.json");
+var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g-0bc5b29c41.json");
 
-admin.initializeApp({
+/*admin.initializeApp({
   credential: admin.credential.cert({
     "projectId": process.env.FIREBASE_PROJECT_ID,
     "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
@@ -40,13 +37,13 @@ admin.initializeApp({
   }),
   databaseURL: process.env.FIREBASE_DATABASE_URL,
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-});
+});*/
 
-/*admin.initializeApp({
+admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://memegenerator-cbece.firebaseio.com",
   storageBucket: "memegenerator-cbece.appspot.com"
-})*/
+})
 
 /* Reference to storage */
 const bucket = admin.storage().bucket();
@@ -96,6 +93,31 @@ app.post('/createMeme', mult.single('image'), function(req, res){
   }
 })
 
+app.get('/memeList', function(req, res) {
+  const posts = db.ref('/posts')
+
+  posts.once("value", function(snapshot) {
+    const data = snapshot.val()
+    if(data) {
+      res.status(200).json({
+        status: 'success',
+        data: data
+      });
+    } else {
+      res.status(500).json({
+        status: 'error',
+        message: 'Data not found'
+      });
+    }
+  }, function (errorObject) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Cound not connect to DB'
+    });
+    console.log("The read failed: " + errorObject.code);
+  });
+})
+
 /**
  * FROM: https://medium.com/@stardusteric/nodejs-with-firebase-storage-c6ddcf131ceb
  * Upload the image file to Google Storage
@@ -107,6 +129,8 @@ const uploadImageToStorage = (file, postId) => {
       reject('No image file');
     }
     const currentTime = Date.now();
+    console.log("TIME")
+    console.log(currentTime)
     const fileUpload = bucket.file("memeImages/"+postId);
     const uuid = UUID();
 
