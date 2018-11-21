@@ -66,7 +66,7 @@ class MemePost extends Component {
   }
 
   render() {
-    const { id, url, time, voteCount, onThumbsUp, onThumbsDown } = this.props
+    const { id, url, time, voteCount, voteMeme } = this.props
 
     const voteCountClass = 
       voteCount > 0 ? "positive" :
@@ -78,9 +78,9 @@ class MemePost extends Component {
         <Footer>
           <p className="time">{this.parseUploadTime(time)}</p>
           <div className="voting">
-            <img className="button" src={thumbsUp} alt="thumbsUp" onClick={() => onThumbsUp(id)} />
+            <img className="button" src={thumbsUp} alt="thumbsUp" onClick={() => voteMeme(id, 1)} />
             <p className={voteCountClass}>{voteCount}</p>
-            <img className="button" src={thumbsDown} alt="thumbsDown" onClick={() => onThumbsDown(id)} />
+            <img className="button" src={thumbsDown} alt="thumbsDown" onClick={() => voteMeme(id, -1)} />
           </div>
         </Footer>
         

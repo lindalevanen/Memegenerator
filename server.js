@@ -93,15 +93,122 @@ app.post('/createMeme', mult.single('image'), function(req, res){
   }
 })
 
-app.get('/memeList', function(req, res) {
-  const posts = db.ref('/posts')
+app.post('/voteMeme', function(req, res) {
+  const { key, amount, uid } = req.body
+  const userRef = db.ref('/userData/'+uid)
+
+  userRef.once("value", function(snapshot) {  // check that user is found from our DB
+    const user = snapshot.val()
+    if(user) {
+      const userVoteRef = db.ref('voteData/' + uid)
+      userVoteRef.once('value', function(snapshot) { 
+        const u = snapshot.val()
+        if(u && u[key]) {  // The user has already voted on this post
+          if(u[key] == amount) { // if the user tries downvotes or upvotes twice, remove the vote
+            const voteRef = userVoteRef.child(key);
+            voteRef.remove().then(function() {
+              changeVoteAmount(key, amount * -1)  // if the user click the same vote again, remove the previous vote
+              console.log("Voting success")
+              res.status(200).json({
+                status: 'success',
+                voteChange: amount * -1,
+                message: 'Vote deleted successfully'
+              });
+            }).catch(function(error) {
+              console.log(error)
+              res.status(500).json({
+                status: 'error',
+                message: 'Deleting of vote failed.'
+              });
+            });
+          } else {  // The user has changed it's mind from upvote to downvote or other way
+            console.log("voting success")
+            userVoteRef.set({
+              [key]: amount
+            });
+            changeVoteAmount(key, amount * 2)
+            res.status(200).json({
+              status: 'success',
+              voteChange: amount * 2,
+              message: 'Voting successful'
+            });
+          }
+        } else {  // The user hasn't voted on this post 
+          userVoteRef.set({
+            [key]: amount
+          });
+          changeVoteAmount(key, amount)
+          console.log("Voting success")
+          res.status(200).json({
+            status: 'success',
+            voteChange: amount,
+            message: 'Voting successful'
+          });
+        }
+      })
+    } else {
+      console.log("Cound not find user: " + errorObject.code);
+      res.status(400).json({
+        status: 'error',
+        message: 'Cound not find user'
+      });
+    }
+  }), function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
+    res.status(500).json({
+      status: 'error',
+      message: 'Cound not connect to DB'
+    });
+  };
+})
+
+const changeVoteAmount = (key, amount) => {
+  console.log("changevoteamount")
+  const postRef = db.ref('/posts/'+key)
+  postRef.transaction(function(post) {
+    if (post) {
+      console.log("upvoting post...")
+      post.voteCount += amount
+    } else {
+      console.log("Post not found...")
+    }
+    return post;
+  });
+}
+
+app.post('/memeList', function(req, res) {
+  let posts = db.ref('/posts').orderByChild("uploadTime").limitToLast(5)
+  const { order } = req.body
+
+  switch (order) {
+    case "best":
+      posts = db.ref('/posts').orderByChild("voteCount").limitToLast(5)
+      break;
+    case "new":
+      posts = db.ref('/posts').orderByChild("uploadTime").limitToLast(5)
+      break;
+    case "old":
+      posts = db.ref('/posts').orderByChild("uploadTime").limitToFirst(5)
+      break;
+    default:
+      break;
+  }
 
   posts.once("value", function(snapshot) {
     const data = snapshot.val()
+    console.log(data)
     if(data) {
+      /* Lets change the data to be in an array, with an id attribute so it's more easily sorted in front */
+      var parsedData = Object.keys(data).map(function(key) {
+        return {...data[key], id: key};
+      });
+      /* Firebase won't sort by descending for us, so lets do it here */
+      if(order === "new" || order === "best") {
+        parsedData = parsedData.reverse()
+      }
       res.status(200).json({
         status: 'success',
-        data: data
+        data: parsedData
       });
     } else {
       res.status(500).json({
@@ -118,6 +225,76 @@ app.get('/memeList', function(req, res) {
   });
 })
 
+app.post('/moreMemes', function(req, res) {
+  const { order, lastPostId, lastPostVal } = req.body
+  console.log(req.body)
+  if(order == null || lastPostId == null) {
+    res.status(400).json({
+      status: 'error',
+      message: 'Order or last post id null'
+    });
+    return;
+  }
+
+  let posts = null
+  switch (order) {
+    case "best":
+      posts = db.ref('/posts').orderByChild("voteCount").endAt(lastPostVal, lastPostId).limitToLast(6)
+      break;
+    case "new":
+      posts = db.ref('/posts').orderByChild("uploadTime").endAt(lastPostVal, lastPostId).limitToLast(6)
+      break;
+    case "old":
+      posts = db.ref('/posts').orderByChild("uploadTime").startAt(lastPostVal, lastPostId).limitToFirst(6)
+      break;
+    default:
+      break;
+  }
+
+
+  if(posts) {
+    posts.once("value", function(snapshot) {
+      const data = snapshot.val()
+      console.log(data)
+      if(data) {
+        /* Lets change the data to be in an array, with an id attribute so it's more easily sorted in front */
+        var parsedData = Object.keys(data).map(function(key) {
+          return {...data[key], id: key};
+        });
+        /* Firebase won't sort by descending for us, so lets do it here */
+        if(order === "new" || order === "best") {
+          parsedData = parsedData.reverse()
+        }
+        /* Firebase includes the ending element in endAt
+           which is the last element in the meme list we already have, so lets remove that */
+        parsedData.shift()
+
+        res.status(200).json({
+          status: 'success',
+          data: parsedData
+        });
+      } else {
+        res.status(500).json({
+          status: 'error',
+          message: 'Data not found'
+        });
+      }
+    }, function (errorObject) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Cound not connect to DB'
+      });
+      console.log("The read failed: " + errorObject.code);
+    });
+  } else {
+    res.status(400).json({
+      status: 'error',
+      message: 'Order must be either new, old or best'
+    });
+    return;
+  }
+})
+
 /**
  * FROM: https://medium.com/@stardusteric/nodejs-with-firebase-storage-c6ddcf131ceb
  * Upload the image file to Google Storage
@@ -129,8 +306,6 @@ const uploadImageToStorage = (file, postId) => {
       reject('No image file');
     }
     const currentTime = Date.now();
-    console.log("TIME")
-    console.log(currentTime)
     const fileUpload = bucket.file("memeImages/"+postId);
     const uuid = UUID();
 

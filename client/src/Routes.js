@@ -6,8 +6,6 @@ import Browse from './components/Browse'
 
 const ContentWrapper = styled.div`
   margin-top: 80px;
-  padding-left: 20px;
-  padding-right: 20px;
   bottom: 0;
 `
 
