@@ -71,14 +71,11 @@ class Browse extends Component {
     }).then(
       response => {
         if(response.status === 200) {
+          console.log("Voting success")
           return response.json()
         } else {
           throw Error(response)
         }
-      }
-    ).then(
-      data => {
-        this.setState({loadingFinishedMeme: false, url: data.message.url})
       }
     ).catch(
       error => {
