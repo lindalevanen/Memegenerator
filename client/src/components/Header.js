@@ -69,7 +69,8 @@ const Header = (props) => {
   const path = props.location.pathname
   const activeLocation = 
     path === "/create" || path === "/" ? "create"
-    : path === "/browse" ? "browse" : ""
+    : path === "/browse" ? "browse" 
+    : path === "/login" ? "login" : ""
 
   return (
     <HeaderWrapper>
@@ -83,6 +84,9 @@ const Header = (props) => {
           </Link>
           <Link className={activeLocation === "browse" ? "active" : ""} to='/browse'>
           	<p>Browse</p>
+        	</Link>
+          <Link className={activeLocation === "login" ? "active" : ""} to='/login'>
+          	<p>Login</p>
         	</Link>
         </NavItems>
       </HeaderContent>
