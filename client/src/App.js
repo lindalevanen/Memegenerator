@@ -1,14 +1,27 @@
-import React, { Component } from "react";
-import Routes from './Routes'
-import Header from './components/Header'
+import React, {
+  Component,
+  Fragment
+} from 'react';
+import {
+  BrowserRouter as Router
+} from 'react-router-dom';
+import AppProvider from './components/AppProvider';
 
-class App extends Component<Props>  {
+import Routes from './Routes'
+
+import Navbar from './shared/Navbar';
+
+class App extends Component  {
   render() {
     return (
-      <div>
-        <Header />
-        <Routes />
-      </div>
+      <AppProvider>
+        <Router>
+          <Fragment>
+            <Navbar />
+            <Routes />
+          </Fragment>
+        </Router>
+      </AppProvider>
     );
   }
 }
