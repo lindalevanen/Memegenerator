@@ -33,6 +33,7 @@ class Browse extends Component {
   }
 
   upvoteMeme = (key) => {
+    this.sendVote(key, 1)
     if(this.state.memes[key]) {
       const modifiedMeme = {
         ...this.state.memes[key], 
@@ -48,6 +49,7 @@ class Browse extends Component {
   }
 
   downvoteMeme = (key) => {
+    this.sendVote(key, -1)
     if(this.state.memes[key]) {
       const modifiedMeme = {
         ...this.state.memes[key], 
@@ -59,9 +61,32 @@ class Browse extends Component {
           [key]: modifiedMeme
         }
       })
-    }
-    
+    } 
   }
+
+  sendVote = (key, amount) => {
+    fetch('/votePost', {
+      method: 'POST',
+      body: {key: key, amount: amount}
+    }).then(
+      response => {
+        if(response.status === 200) {
+          return response.json()
+        } else {
+          throw Error(response)
+        }
+      }
+    ).then(
+      data => {
+        this.setState({loadingFinishedMeme: false, url: data.message.url})
+      }
+    ).catch(
+      error => {
+        console.log(error.statusText) // Handle the error response object
+        alert("Something went wrong when voting... "+ error.statusText)
+      } 
+    );
+  } 
 
   parseMemes = (memes) => {
     return (
