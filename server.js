@@ -27,9 +27,9 @@ const mult = Multer({
 
 /* FB initialization (Admin) */
 var admin = require("firebase-admin");
-var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g-0bc5b29c41.json");
+//var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g-0bc5b29c41.json");
 
-/*admin.initializeApp({
+admin.initializeApp({
   credential: admin.credential.cert({
     "projectId": process.env.FIREBASE_PROJECT_ID,
     "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
@@ -37,13 +37,13 @@ var serviceAccount = require("./keys/memegenerator-cbece-firebase-adminsdk-gou1g
   }),
   databaseURL: process.env.FIREBASE_DATABASE_URL,
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-});*/
+});
 
-admin.initializeApp({
+/*admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://memegenerator-cbece.firebaseio.com",
   storageBucket: "memegenerator-cbece.appspot.com"
-})
+})*/
 
 /* Reference to storage */
 const bucket = admin.storage().bucket();
