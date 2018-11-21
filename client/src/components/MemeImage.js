@@ -40,9 +40,9 @@ class MemeImage extends React.Component {
       const dif = this.props.canvasWidth / 2 - this.props.imageWidth / 2
       this.setState({
         image: image,
-        topTextX: dif,
+        topTextX: dif + 10,
         topTextY: 20,
-        bottomTextX: dif
+        bottomTextX: dif + 10
       })
       this.props.setImageVisible(true)
     }

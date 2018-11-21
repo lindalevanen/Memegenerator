@@ -7,7 +7,7 @@ import Colors from './../colors'
 
 //TODO: move styled-components to a style file
 const HeaderWrapper = styled.div`
-  z-index: 1;
+  z-index: 10;
   position: fixed;
   height: 80px;
   width: 100%;
