@@ -62,6 +62,7 @@ app.post('/createMeme', mult.single('image'), function(req, res){
     const postId = postRef.key
 
     uploadImageToStorage(memeFile, postId).then((data) => {
+      const url = priva ? data.url : 'http://www-memegenerator.herokuapp.com/meme/' + postId
       const postData = {
         imageUrl: data.url,
         uploadTime: data.time,
@@ -336,7 +337,7 @@ const uploadImageToStorage = (file, postId) => {
   return promise;
 }
 
-/*app.get('/meme/:postId', function(req, res) {
+app.get('/meme/:postId', function(req, res) {
   const postId = req.params.postId
   console.log("postId:")
   console.log(postId)
@@ -345,7 +346,10 @@ const uploadImageToStorage = (file, postId) => {
   ref.on("value", function(snapshot) {
     const data = snapshot.val()
     if(data) {
-      const file = bucket.file('memeImages/' + postId);
+      //const file = bucket.file('memeImages/' + postId);
+
+      res.redirect(data.imageUrl);
+
 
       /*const ref = admin.storage().ref().child('memeImages/' + postId)
 
@@ -370,7 +374,7 @@ const uploadImageToStorage = (file, postId) => {
         });
       } else {
         res.status(400).send({message: "Meme not found."});
-      }
+      }*/
 
     } else {
       res.status(400).send({message: "Meme not found."});
@@ -379,7 +383,7 @@ const uploadImageToStorage = (file, postId) => {
   }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
   });
-});*/
+});
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
