@@ -259,14 +259,14 @@ class Create extends React.Component {
     })
   }
 
-  createMeme = () => {
+  createMeme = (uid, isLogged) => {
     const dataURL = this.stageRef.getStage().toDataURL()
     const blob = this.dataURItoBlob(dataURL)
     var fd = new FormData()
     fd.append("image", blob)
     fd.append("priva", this.state.private)
-    if(isLoggedIn) {
-      fd.append("userId", 12345)  // TODO: add userid when we have that
+    if(isLogged) {
+      fd.append("userId", uid)  // TODO: add userid when we have that
     }
 
     this.setState({finishedMemeOpen: true})
@@ -453,13 +453,25 @@ class Create extends React.Component {
             <span>Private</span>
           </label>
         </MemeTextForm>
-      
+        <Consumer>
+        
+        {({ state, ...context }) => (
+          state.currentUser ?
         <CreateMemeButton
           disabled={!this.state.memeImageVisible}
-          onClick={this.state.memeImageVisible ? this.createMeme : null}
+          onClick={this.state.memeImageVisible ? this.createMeme(context.currentUser.uid, true) : null}
         >
           <span>CREATE MEME</span>
         </CreateMemeButton>
+        :
+        <CreateMemeButton
+          disabled={!this.state.memeImageVisible}
+          onClick={this.state.memeImageVisible ? this.createMeme("123", false) : null}
+        >
+          <span>CREATE MEME</span>
+        </CreateMemeButton>
+          )}
+        </Consumer>
 
         {this.state.chooseTemplateOpen &&
           <ModalWrapper

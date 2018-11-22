@@ -90,7 +90,6 @@ class Browse extends Component {
   }
 
   voteMeme = (key, amount, userID) => {
-    console.log(userID)
     this.sendVote(key, amount, userID)
   }
 
