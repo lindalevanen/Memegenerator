@@ -92,6 +92,9 @@ class MemePost extends Component {
         :
         <Footer>
           <p className="time">{this.parseUploadTime(time)}</p>
+          <div className="voting">
+            <p className={voteCountClass}>{voteCount}</p>
+          </div>
         </Footer>
         )}
         </Consumer>
