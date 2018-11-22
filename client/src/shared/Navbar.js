@@ -38,7 +38,7 @@ const Navbar = props => {
                 <p id='logo'>MG</p>
               </Link>
               <NavItems>
-                <Link className={activeLocation === "login" ? "active" : ""} onClick={handleLogout} to='/create'>
+                <Link className={activeLocation === "login" ? "active" : ""} onClick={() => handleLogout(context)} to='/create'>
                   <p>Logout</p>
                 </Link>
                 <Link className={activeLocation === "create" ? "active" : ""} to='/create'>
