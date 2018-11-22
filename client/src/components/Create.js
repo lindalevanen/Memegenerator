@@ -8,6 +8,8 @@ import FinishedMeme from './FinishedMeme'
 import ModalWrapper from './ModalWrapper'
 import Colors from './../colors'
 
+import { Consumer } from './AppProvider';
+
 //const b64toBlob = require('b64-to-blob');
 
 const isLoggedIn = false
