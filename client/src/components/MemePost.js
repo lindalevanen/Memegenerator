@@ -92,11 +92,6 @@ class MemePost extends Component {
         :
         <Footer>
           <p className="time">{this.parseUploadTime(time)}</p>
-          <div className="voting">
-            <img className="button" src={thumbsUp} alt="thumbsUp" onClick={() => voteMeme(id, 1, state.currentUser.uid)} />
-            <p className={voteCountClass}>{voteCount}</p>
-            <img className="button" src={thumbsDown} alt="thumbsDown" onClick={() => voteMeme(id, -1, state.currentUser.uid)} />
-          </div>
         </Footer>
         )}
         </Consumer>
