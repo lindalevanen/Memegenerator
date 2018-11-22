@@ -89,11 +89,12 @@ class Browse extends Component {
     return body.data;
   }
 
-  voteMeme = (key, amount) => {
-    this.sendVote(key, amount)
+  voteMeme = (key, amount, userID) => {
+    console.log(userID)
+    this.sendVote(key, amount, userID)
   }
 
-  sendVote = (key, amount) => {
+  sendVote = (key, amount, userID) => {
     fetch('/voteMeme', {
       method: 'POST',
       headers: {
@@ -102,7 +103,7 @@ class Browse extends Component {
       body: JSON.stringify({
         key: key, 
         amount: amount, 
-        uid: 123
+        uid: userID
       })
     }).then(
       response => {
@@ -127,7 +128,7 @@ class Browse extends Component {
     ).catch(
       error => {
         console.log(error) // Handle the error response object
-        alert("Something went wrong when voting... "+ error.toString)
+        alert("Something went wrong when voting... "+ error.toString())
       } 
     );
   }
@@ -202,7 +203,6 @@ class Browse extends Component {
   }
 
   render() {
-    console.log(this.state.memes)
     return (
       <div>
         <Header>

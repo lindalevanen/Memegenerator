@@ -4,6 +4,8 @@ import styled from 'styled-components'
 
 import Colors from './../colors'
 
+import { Consumer } from './AppProvider';
+
 const thumbsUp = require('../images/thumbs_up_icon.svg')
 const thumbsDown = require('../images/thumbs_down_icon.svg')
 
@@ -75,15 +77,29 @@ class MemePost extends Component {
     return (
       <PostWrapper>
         <img className="memeImage" src={url} alt="memeImage" />
+        <Consumer>
+              
+        {({ state, ...context }) => (
+          state.currentUser ?
         <Footer>
           <p className="time">{this.parseUploadTime(time)}</p>
           <div className="voting">
-            <img className="button" src={thumbsUp} alt="thumbsUp" onClick={() => voteMeme(id, 1)} />
+            <img className="button" src={thumbsUp} alt="thumbsUp" onClick={() => voteMeme(id, 1, state.currentUser.uid)} />
             <p className={voteCountClass}>{voteCount}</p>
-            <img className="button" src={thumbsDown} alt="thumbsDown" onClick={() => voteMeme(id, -1)} />
+            <img className="button" src={thumbsDown} alt="thumbsDown" onClick={() => voteMeme(id, -1, state.currentUser.uid)} />
           </div>
         </Footer>
-        
+        :
+        <Footer>
+          <p className="time">{this.parseUploadTime(time)}</p>
+          <div className="voting">
+            <img className="button" src={thumbsUp} alt="thumbsUp" onClick={() => voteMeme(id, 1, state.currentUser.uid)} />
+            <p className={voteCountClass}>{voteCount}</p>
+            <img className="button" src={thumbsDown} alt="thumbsDown" onClick={() => voteMeme(id, -1, state.currentUser.uid)} />
+          </div>
+        </Footer>
+        )}
+        </Consumer>
       </PostWrapper>
     );
   }
