@@ -317,10 +317,10 @@ class Create extends React.Component {
 
   chooseImage = (json) => {
     this.setState({
-      image: json,
       topText: 'TOP TEXT',
       bottomText: 'BOTTOM TEXT',
-      chooseTemplateOpen: false
+      chooseTemplateOpen: false,
+      url: ""
     })
     this.saveDataURL(json.url, json.width, json.height)
   }
@@ -341,7 +341,7 @@ class Create extends React.Component {
     img.crossOrigin = 'Anonymous';
     img.addEventListener("load", () => {
       canvas.getContext("2d").drawImage(img, 0, 0, cWidth, cHeight)
-      this.setState({imageDataUrl: canvas.toDataURL()})
+      this.setState({imageDataUrl: canvas.toDataURL(), url: ""})
     });
     img.setAttribute("src", url);
   }
@@ -385,7 +385,6 @@ class Create extends React.Component {
               topText={this.state.topText}
               bottomText={this.state.bottomText}
               fontSize={this.state.fontSize}
-              image={this.state.image}
               imageHeight={this.state.finalHeight}
               imageWidth={this.state.finalImageWidth}
               canvasWidth={this.state.finalCanvasWidth}
@@ -494,7 +493,6 @@ class Create extends React.Component {
             title={this.state.url ? "Your finished meme!" : " "}
           >
             <FinishedMeme
-              loading={this.state.loadingFinishedMeme}
               width={this.state.finalCanvasWidth}
               url={this.state.url}
               onCreateAnother={this.createAnother}

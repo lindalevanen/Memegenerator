@@ -26,7 +26,8 @@ const Header = styled.div`
   box-shadow: 0px 1px 6px black;
 
   select {
-    padding: 3px 20px 2px 20px;
+    padding-bottom: 2px;
+    width: 120px;
     appearance: none;
     margin-left: 10px;
     color: white;
