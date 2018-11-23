@@ -14,10 +14,18 @@ const LoginForm = styled.form`
   max-width: 400px;
   margin: auto;
   margin-top: 90px;
+  margin-bottom: 100px;
 
   h1 {
     text-align: center;
     margin-bottom: 60px;
+    color: white;
+  }
+
+  h4 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: normal;
     color: white;
   }
 
@@ -93,7 +101,8 @@ class Form extends Component {
   render() {
     return (
       <LoginForm onSubmit={this.handleSubmit}>
-        <h1>{this.props.title}</h1>
+        {this.props.isLogin && <h1>{this.props.title}</h1> }
+        {this.props.isRegister && <h4>{this.props.title}</h4> }
         <input
           placeholder="Email"
           name="name"

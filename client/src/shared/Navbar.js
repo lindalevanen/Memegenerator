@@ -55,9 +55,6 @@ const Navbar = props => {
                 <p id='logo'>MG</p>
               </Link>
               <NavItems>
-                <Link className={activeLocation === "register" ? "active" : ""} to='/register'>
-                  <p>Register</p>
-                </Link>
                 <Link className={activeLocation === "login" ? "active" : ""} to='/login'>
                   <p>Login</p>
                 </Link>

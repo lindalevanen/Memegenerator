@@ -4,7 +4,6 @@ import { Switch, Route } from 'react-router-dom'
 import Create from './components/Create'
 import Browse from './components/Browse'
 import Login from './components/Login'
-import Signup from './components/Signup'
 
 const ContentWrapper = styled.div`
   margin-top: 80px;
@@ -18,7 +17,6 @@ const Routes = () => (
       <Route path='/create'   component={Create}/>
       <Route path='/browse'   component={Browse}/>
       <Route path='/login'    component={Login}/>
-      <Route path='/register' component={Signup}/>
     </Switch>
   </ContentWrapper>
 )
