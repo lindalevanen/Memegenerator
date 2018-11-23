@@ -59,7 +59,7 @@ class Browse extends Component {
     super(props)
     this.state = {
       memes: [],
-      voted: {},
+      //voted: {},
       orderType: "new"
     }
   }
@@ -90,7 +90,7 @@ class Browse extends Component {
     return body.data;
   }
 
-  voteMeme = (key, amount, userID) => {
+  /*voteMeme = (key, amount, userID) => {
     this.sendVote(key, amount, userID)
   }
 
@@ -131,7 +131,7 @@ class Browse extends Component {
         alert("Something went wrong when voting... "+ error.toString())
       } 
     );
-  }
+  }*/
 
   orderList = (e) => {
     const type = e.target.value
@@ -146,9 +146,6 @@ class Browse extends Component {
       case "new":
       case "old":
         lastVal = lastMeme.uploadTime
-        break;
-      case "best":
-        lastVal = lastMeme.voteCount
         break;
       default: break;
     }
@@ -194,8 +191,8 @@ class Browse extends Component {
             id={meme.id}
             url={meme.imageUrl}
             time={meme.uploadTime}
-            voteCount={meme.voteCount}
-            voteMeme={this.voteMeme}
+            /*voteCount={meme.voteCount}
+            voteMeme={this.voteMeme}*/
           />
         )
       })
@@ -211,7 +208,6 @@ class Browse extends Component {
             <select value={this.state.orderType} onChange={this.orderList}>
               <option value="new">Newest</option>
               <option value="old">Oldest</option>
-              <option value="best">Best</option>
             </select>
           </label>
         </Header>

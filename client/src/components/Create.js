@@ -266,7 +266,8 @@ class Create extends React.Component {
     const blob = this.dataURItoBlob(dataURL)
     var fd = new FormData()
     fd.append("image", blob)
-    fd.append("priva", this.state.private)
+    console.log(this.state.private)
+    fd.append("priva", this.state.private ? true : "")
     if(isLogged) {
       fd.append("userId", uid)  // TODO: add userid when we have that
     }

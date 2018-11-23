@@ -9,7 +9,6 @@ const UUID = require("uuid-v4");
 // Serve any static files
 app.use(express.static(path.join(__dirname, "client/build")));
 
-
 if (process.env.NODE_ENV === "production") {
   // Handle React routing, return all requests to React app
   app.get("*", function(req, res) {
@@ -54,6 +53,8 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 app.use(bodyParser())
 
+/* Create a meme with userId and a private tag */
+
 app.post('/createMeme', mult.single('image'), function(req, res){
   const memeFile = req.file
   const { userId, priva } = req.body
@@ -62,39 +63,49 @@ app.post('/createMeme', mult.single('image'), function(req, res){
     const postId = postRef.key
 
     uploadImageToStorage(memeFile, postId).then((data) => {
-      const url = priva ? data.url : 'http://www-memegenerator.herokuapp.com/meme/' + postId
-      const postData = {
-        imageUrl: data.url,
-        uploadTime: data.time,
-        voteCount: 0,
-        private: priva
-      }
-      if(userId) {
-        postData.userId = userId
+      if(priva) { // if the user wants the post to be private, lets not save it in the db, just in storage
+        res.status(200).json({
+          status: 'success',
+          message: {
+            url: data.url
+          }
+        });
+      } else {
+        const postData = {
+          imageUrl: data.url,
+          uploadTime: data.time,
+          voteCount: 0,
+          private: priva
+        }
+        if(userId) {
+          postData.userId = userId
+        }
+
+        postRef.set(postData, function(error) {
+          if (error) {
+            res.status(500).send({
+              status: "error",
+              message: error
+            });
+          } else {
+            res.status(200).json({
+              status: 'success',
+              message: {
+                url: data.url
+              }
+            });
+          }
+        });
       }
 
-      postRef.set(postData, function(error) {
-        if (error) {
-          res.status(500).send({
-            status: "error",
-            message: error
-          });
-        } else {
-          res.status(200).json({
-            status: 'success',
-            message: {
-              url: data.url
-            }
-          });
-        }
-      });
+      
     }).catch((error) => {
       console.error(error);
     });
   }
 })
 
-app.post('/voteMeme', function(req, res) {
+/*app.post('/voteMeme', function(req, res) {
   const { key, amount, uid } = req.body
   const userRef = db.ref('/userData/'+uid)
 
@@ -175,16 +186,15 @@ const changeVoteAmount = (key, amount) => {
     }
     return post;
   });
-}
+}*/
+
+/* Get the next 5 memes of with order that's either new or old */
 
 app.post('/memeList', function(req, res) {
   let posts = db.ref('/posts').orderByChild("uploadTime").limitToLast(5)
   const { order } = req.body
 
   switch (order) {
-    case "best":
-      posts = db.ref('/posts').orderByChild("voteCount").limitToLast(5)
-      break;
     case "new":
       posts = db.ref('/posts').orderByChild("uploadTime").limitToLast(5)
       break;
@@ -197,14 +207,13 @@ app.post('/memeList', function(req, res) {
 
   posts.once("value", function(snapshot) {
     const data = snapshot.val()
-    console.log(data)
     if(data) {
       /* Lets change the data to be in an array, with an id attribute so it's more easily sorted in front */
       var parsedData = Object.keys(data).map(function(key) {
         return {...data[key], id: key};
       });
       /* Firebase won't sort by descending for us, so lets do it here */
-      if(order === "new" || order === "best") {
+      if(order === "new") {
         parsedData = parsedData.reverse()
       }
       res.status(200).json({
@@ -226,9 +235,10 @@ app.post('/memeList', function(req, res) {
   });
 })
 
+/* Get the next 5 memes of the order that's being used, with the help of the last post shown */
+
 app.post('/moreMemes', function(req, res) {
   const { order, lastPostId, lastPostVal } = req.body
-  console.log(req.body)
   if(order == null || lastPostId == null) {
     res.status(400).json({
       status: 'error',
@@ -239,9 +249,6 @@ app.post('/moreMemes', function(req, res) {
 
   let posts = null
   switch (order) {
-    case "best":
-      posts = db.ref('/posts').orderByChild("voteCount").endAt(lastPostVal, lastPostId).limitToLast(6)
-      break;
     case "new":
       posts = db.ref('/posts').orderByChild("uploadTime").endAt(lastPostVal, lastPostId).limitToLast(6)
       break;
@@ -252,18 +259,16 @@ app.post('/moreMemes', function(req, res) {
       break;
   }
 
-
   if(posts) {
     posts.once("value", function(snapshot) {
       const data = snapshot.val()
-      console.log(data)
       if(data) {
         /* Lets change the data to be in an array, with an id attribute so it's more easily sorted in front */
         var parsedData = Object.keys(data).map(function(key) {
           return {...data[key], id: key};
         });
         /* Firebase won't sort by descending for us, so lets do it here */
-        if(order === "new" || order === "best") {
+        if(order === "new") {
           parsedData = parsedData.reverse()
         }
         /* Firebase includes the ending element in endAt
@@ -290,7 +295,7 @@ app.post('/moreMemes', function(req, res) {
   } else {
     res.status(400).json({
       status: 'error',
-      message: 'Order must be either new, old or best'
+      message: 'Order must be either new or old'
     });
     return;
   }
@@ -337,10 +342,8 @@ const uploadImageToStorage = (file, postId) => {
   return promise;
 }
 
-app.get('/meme/:postId', function(req, res) {
+/*app.get('/meme/:postId', function(req, res) {
   const postId = req.params.postId
-  console.log("postId:")
-  console.log(postId)
   var ref = db.ref("posts/" + postId);
 
   ref.on("value", function(snapshot) {
@@ -376,14 +379,14 @@ app.get('/meme/:postId', function(req, res) {
         res.status(400).send({message: "Meme not found."});
       }*/
 
-    } else {
+    /*} else {
       res.status(400).send({message: "Meme not found."});
     }
     
   }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
   });
-});
+});*/
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
