@@ -218,7 +218,7 @@ class Browse extends Component {
         <MemeList>
           {this.state.memes && this.parseMemes(this.state.memes)}
         </MemeList>
-        {this.state.memes && <Button onClick={this.loadMore}>Load more</Button> }
+        {this.state.memes && this.state.memes.size > 0 && <Button onClick={this.loadMore}>Load more</Button> }
       </div>
     );
   }
