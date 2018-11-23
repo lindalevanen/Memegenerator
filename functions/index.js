@@ -14,6 +14,18 @@ admin.initializeApp();
 const JPEG_EXTENSION = '.jpg';
 
 /**
+ * Save user to database when created
+ */
+exports.saveUserToDatabase = functions.auth.user().onCreate((user) => {
+  return admin.database().ref(`/userData/`).child(user.uid).set({
+    username: user.email,
+    email: user.email,
+    uid: user.uid,
+    metadata: user.metadata
+  });
+});
+
+/**
  * When an image is uploaded in the Storage bucket it is converted to JPEG automatically using
  * ImageMagick.
  */
