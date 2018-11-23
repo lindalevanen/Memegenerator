@@ -321,8 +321,7 @@ class Create extends React.Component {
     this.setState({
       topText: 'TOP TEXT',
       bottomText: 'BOTTOM TEXT',
-      chooseTemplateOpen: false,
-      url: ""
+      chooseTemplateOpen: false
     })
     this.saveDataURL(json.url, json.width, json.height)
   }
@@ -491,7 +490,7 @@ class Create extends React.Component {
         {this.state.finishedMemeOpen &&
           <ModalWrapper
             maxWidth={this.state.finalCanvasWidth + 100}
-            closeList={() => this.setState({finishedMemeOpen: false})}
+            closeList={() => this.setState({finishedMemeOpen: false, url: ""})}
             title={this.state.url ? "Your finished meme!" : " "}
           >
             <FinishedMeme
