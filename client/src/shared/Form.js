@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { auth } from '../firebase';
 import Colors from './../colors'
 
+/* A custom form used in login and register */
 
 const LoginForm = styled.form`
   width: 100%;

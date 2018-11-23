@@ -9,10 +9,10 @@ import { Consumer } from '../components/AppProvider';
 
 import Colors from './../colors'
 
-
+/* The header of the site with our logo and navigation components Browse, Create, Login/Logout and Register */
 
 const Navbar = props => {
-
+  
   const path = props.location.pathname
   const activeLocation = 
     path === "/create" || path === "/" ? "create"

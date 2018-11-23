@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import Colors from './../colors'
 
+ /* A wrapper container for the popup modal that's used around TemplateList and FinishedMeme */
+
 const ViewContainer = styled.div`
   position: fixed;
   z-index: 2;

@@ -6,8 +6,7 @@ import Colors from './../colors'
 
 import { Consumer } from './AppProvider';
 
-//const thumbsUp = require('../images/thumbs_up_icon.svg')
-//const thumbsDown = require('../images/thumbs_down_icon.svg')
+/* Memepost is a simple list item view of the meme in the Browse list */
 
 const PostWrapper = styled.div`
   margin-bottom: 20px;
@@ -68,11 +67,7 @@ class MemePost extends Component {
   }
 
   render() {
-    const { /*id,*/ url, time/*, voteCount, voteMeme */} = this.props
-
-    /*const voteCountClass = 
-      voteCount > 0 ? "positive" :
-        voteCount < 0 ? "negative" : ""*/
+    const {url, time} = this.props
     
     return (
       <PostWrapper>

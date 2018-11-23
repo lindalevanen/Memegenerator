@@ -4,6 +4,8 @@ import Form from '../shared/Form';
 import { auth } from '../firebase';
 import { Consumer } from './AppProvider';
 
+ /* A simple signup with a custom form found from the component Form */
+
 const Signup = props => <Consumer>
   {({ state, ...context }) => (
     <Form

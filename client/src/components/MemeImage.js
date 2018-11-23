@@ -1,6 +1,8 @@
 import React from 'react'
 import { Layer, Text, Image } from 'react-konva'
 
+/* The content of the react-konva canvas which consists of the meme image and its two textfields */
+
 class MemeImage extends React.Component {
   layer = null
   image = null

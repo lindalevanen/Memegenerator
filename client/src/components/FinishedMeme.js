@@ -5,14 +5,11 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 import { css } from 'react-emotion';
 import { BeatLoader } from 'react-spinners';
-
-
 import Colors from './../colors'
+
+/* A view to show the finished meme and a functionality to copy the url to clipboard */
+
 const copyIcon = require('../images/copy_icon.svg')
-
-const FinishedMemeContainer = styled.div`
-
-`
 
 const MemeImageWrapper = styled.div`
   display: flex;
@@ -82,8 +79,6 @@ const override = css`
   position: absolute;
 `;
 
-
-//TODO: the whole class
 class FinishedMeme extends React.Component {
 
   copyUrlToClipboard = () => {
@@ -107,11 +102,9 @@ class FinishedMeme extends React.Component {
     document.body.removeChild(textArea);
   }
 
-  // possible share functionality: https://www.npmjs.com/package/react-share
   render() {
     return (
-      <FinishedMemeContainer>
-        
+      <div>
         <MemeImageWrapper>
           {this.props.url && <img className="image" src={this.props.url} alt="meme" /> }
           <BeatLoader
@@ -147,7 +140,7 @@ class FinishedMeme extends React.Component {
           hideProgressBar={true}
           removeCloseButton={true}
         />
-      </FinishedMemeContainer>
+      </div>
     )
   }
 }

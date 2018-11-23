@@ -4,6 +4,9 @@ import styled from 'styled-components'
 import MemePost from './MemePost'
 import Colors from './../colors'
 
+/* The Browse-component consists of a header that lets the user to sort the memes,
+   and the meme list of MemeImage-components */
+
 const MemeList = styled.div`
   width: 100%;
   max-width: 500px;
@@ -90,6 +93,7 @@ class Browse extends Component {
     return body.data;
   }
 
+  /* We decided to remove voting due to not being able to finish it completely */
   /*voteMeme = (key, amount, userID) => {
     this.sendVote(key, amount, userID)
   }
@@ -176,7 +180,7 @@ class Browse extends Component {
       }
     ).catch(
       error => {
-        console.log(error) // Handle the error response object
+        console.log(error)
         alert("Something went wrong when voting... "+ error.message)
       } 
     );
@@ -191,8 +195,6 @@ class Browse extends Component {
             id={meme.id}
             url={meme.imageUrl}
             time={meme.uploadTime}
-            /*voteCount={meme.voteCount}
-            voteMeme={this.voteMeme}*/
           />
         )
       })

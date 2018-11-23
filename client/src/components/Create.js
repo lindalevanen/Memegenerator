@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Stage } from 'react-konva'
+import { Consumer } from './AppProvider';
 
 import MemeImage from './MemeImage'
 import TemplateList from './TemplateList'
@@ -8,11 +9,8 @@ import FinishedMeme from './FinishedMeme'
 import ModalWrapper from './ModalWrapper'
 import Colors from './../colors'
 
-import { Consumer } from './AppProvider';
-
-//const b64toBlob = require('b64-to-blob');
-
-const isLoggedIn = false
+/* The wrapper and main functionality of the Create-view */
+/* It consists of showing a MemeImage, it's editor, FinishedMeme-view and TemplateList-view full of ripe meme teplates */
 
 const fontSizeIcon = require('../images/font_icon.png')
 
@@ -20,7 +18,6 @@ const canvasWidth = 500
 const canvasHeight = 200
 const marginX = 20
 
-//TODO: move styles to a separate style file
 const CreateWrapper = styled.div`
   width: 100%;
   margin: auto;
@@ -158,7 +155,6 @@ class Create extends React.Component {
   
   constructor(props) {
     super(props)
-    //TODO: huge refactor, not all these values are even needed
     this.state = {
       image: '',
       imageDataUrl: '',
@@ -178,7 +174,6 @@ class Create extends React.Component {
     }
   }
 
-  //TODO: We might want to move this to TemplateList...
   TEMPLATE_API_URL = 'https://api.imgflip.com/get_memes'
 
   fetchTemplates = async () => {
@@ -266,10 +261,9 @@ class Create extends React.Component {
     const blob = this.dataURItoBlob(dataURL)
     var fd = new FormData()
     fd.append("image", blob)
-    console.log(this.state.private)
     fd.append("priva", this.state.private ? true : "")
     if(isLogged) {
-      fd.append("userId", uid)  // TODO: add userid when we have that
+      fd.append("userId", uid)
     }
 
     this.setState({finishedMemeOpen: true})
@@ -370,9 +364,7 @@ class Create extends React.Component {
     reader.readAsDataURL(e.target.files[0]);     
   }
 
-
   render() {
-    //TODO: refactor, we really dont want all of the components to be defined here (MemeTextForm could be a class)
     return (
       <CreateWrapper style={{maxWidth: canvasWidth}}>
         <CanvasWrapper>
@@ -413,20 +405,6 @@ class Create extends React.Component {
                   : null }
               > + </p>
             </div>
-            {/*<div>
-              <p 
-                onClick={() => 
-                  this.state.fontSize > 10 ? 
-                  this.setState({fontSize: this.state.fontSize - 2})
-                  : null }
-              > decrease </p>
-              <p 
-                onClick={() => 
-                  this.state.fontSize < 60 ?
-                  this.setState({fontSize: this.state.fontSize + 2})
-                  : null }
-              > increase </p>
-            </div>*/}
           </EditContainer>
         }
 

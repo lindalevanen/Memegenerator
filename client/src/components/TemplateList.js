@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import GridList from '@material-ui/core/GridList';
 
+/* A grid view that shows some popular memes from the imgflip API we use, passed as props to this component. */
+
 const ListWrapper = styled.div`
   padding: 20px;
   padding-top: 0px;
