@@ -459,14 +459,14 @@ class Create extends React.Component {
           state.currentUser ?
         <CreateMemeButton
           disabled={!this.state.memeImageVisible}
-          onClick={this.state.memeImageVisible ? this.createMeme(context.currentUser.uid, true) : null}
+          onClick={this.state.memeImageVisible ? () => this.createMeme(state.currentUser.uid, true) : null}
         >
           <span>CREATE MEME</span>
         </CreateMemeButton>
         :
         <CreateMemeButton
           disabled={!this.state.memeImageVisible}
-          onClick={this.state.memeImageVisible ? this.createMeme("123", false) : null}
+          onClick={this.state.memeImageVisible ? () => this.createMeme("123", false) : null}
         >
           <span>CREATE MEME</span>
         </CreateMemeButton>
